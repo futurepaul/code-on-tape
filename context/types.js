@@ -1,0 +1,10 @@
+export const SET_EDITOR_VALUE = "SET_EDITOR_VALUE";
+export const SET_CURRENT_LINE = "SET_CURRENT_LINE";
+export const SET_RECORDING = "SET_RECORDING";
+export const ADD_EVENT = "ADD_EVENT";
+export const IMPORT_GIST = "IMPORT_GIST";
+export const SET_GIST_ID = "SET_GIST_ID";
+export const SET_GISTS = "SET_GISTS";
+export const SET_START_TIME = "SET_START_TIME";
+export const SET_PLAYING = "SET_PLAYING";
+export const NEXT_PLAYBACK_INDEX = "NEXT_PLAYBACK_INDEX";
