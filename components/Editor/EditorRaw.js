@@ -16,7 +16,15 @@ class MonacoEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { value, language, theme, height, options, width } = this.props;
+    const {
+      value,
+      language,
+      theme,
+      height,
+      options,
+      width,
+      cursor
+    } = this.props;
 
     const { editor } = this;
     const model = editor.getModel();
@@ -47,6 +55,13 @@ class MonacoEditor extends React.Component {
     }
     if (prevProps.options !== options) {
       editor.updateOptions(options);
+    }
+
+    if (prevProps.cursor && cursor !== prevProps.cursor) {
+      this.__prevent_trigger_change_event = true;
+      editor.setPosition(this.props.cursor);
+      editor.focus();
+      this.__prevent_trigger_change_event = false;
     }
   }
 
@@ -140,6 +155,7 @@ MonacoEditor.propTypes = {
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   value: PropTypes.string,
+  cursor: PropTypes.object,
   defaultValue: PropTypes.string,
   language: PropTypes.string,
   theme: PropTypes.string,
@@ -154,6 +170,7 @@ MonacoEditor.defaultProps = {
   width: "100%",
   height: "100%",
   value: null,
+  cursor: null,
   defaultValue: "",
   language: "javascript",
   theme: null,

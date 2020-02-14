@@ -12,6 +12,7 @@ if (process.browser && !MonacoEditor) {
 
 const Editor = ({ value }) => {
   const [code, setCode] = useState("");
+  const [cursor, setCursor] = useState(null);
 
   if (!MonacoEditor) {
     return <div></div>;
@@ -23,16 +24,15 @@ const Editor = ({ value }) => {
 
   if (value != null) {
     return (
-      <div
-        style={{
-          width: "100%",
-          height: "100vh"
-        }}
-      >
+      <div>
+        <button onClick={() => setCursor({ lineNumber: 10, column: 0 })}>
+          Set cursor
+        </button>
         <MonacoEditor
           language="javascript"
           theme="vs-dark"
           value={value}
+          cursor={cursor}
           options={{ selectOnLineNumbers: true, minimap: { enabled: false } }}
           editorDidMount={e => console.log(e)}
           cursorChange={e => console.log(e)}
