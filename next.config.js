@@ -20,7 +20,8 @@ module.exports = withCSS({
 
     config.plugins.push(
       new MonacoWebpackPlugin({
-        publicPath: "_next",
+        languages: [],
+        publicPath: "",
         filename: `static/[name].worker.js`
       })
     );

@@ -102,9 +102,17 @@ class MonacoEditor extends React.Component {
   editorDidMount(editor) {
     this.props.editorDidMount(editor, monaco);
 
-    this._subscription = editor.onDidChangeModelContent(event => {
+    // This is how we'd do if we cared about changes to the value:
+    // this._subscription = editor.onDidChangeModelContent(event => {
+    //   if (!this.__prevent_trigger_change_event) {
+    //     this.props.onChange(editor.getValue(), event);
+    //   }
+    // });
+
+    this._subscription = editor.onDidChangeCursorPosition(event => {
+      // console.info(`cursor position changed ${event.position}`);
       if (!this.__prevent_trigger_change_event) {
-        this.props.onChange(editor.getValue(), event);
+        this.props.cursorChange(event.position);
       }
     });
   }
@@ -114,7 +122,7 @@ class MonacoEditor extends React.Component {
     // const fixedWidth = processSize(width);
     // const fixedHeight = processSize(height);
     const style = {
-      width: "100vw",
+      width: "100%",
       height: "100vh"
     };
 
@@ -157,60 +165,3 @@ MonacoEditor.defaultProps = {
 };
 
 export default MonacoEditor;
-
-// import * as React from "react";
-// import * as monaco from "monaco-editor";
-
-// // (self as any).MonacoEnvironment = {
-// //   getWorkerUrl: function(moduleId: string, label: string) {
-// //     console.log("loading", moduleId, label);
-// //     if (label === "json") {
-// //       return "./json.worker.bundle.js";
-// //     }
-// //     if (label === "css") {
-// //       return "./css.worker.bundle.js";
-// //     }
-// //     if (label === "html") {
-// //       return "./html.worker.bundle.js";
-// //     }
-// //     if (label === "typescript" || label === "javascript") {
-// //       return "./ts.worker.bundle.js";
-// //     }
-// //     return "./editor.worker.bundle.js";
-// //   }
-// // };
-
-// interface Props {
-//   onEditor: (editor: monaco.editor.IStandaloneCodeEditor) => void;
-// }
-
-// export class EditorRaw extends React.Component<Props, {}> {
-//   private editor!: monaco.editor.IStandaloneCodeEditor;
-
-//   componentDidMount() {
-//     console.info("editor mounted");
-
-//     this.editor = monaco.editor.create(
-//       document.getElementById("monacoEditor")!,
-//       {
-//         value: "hello",
-//         language: "javascript",
-//         minimap: { enabled: false },
-//         theme: "vs-dark",
-//         fontSize: 16,
-//         readOnly: true
-//       }
-//     );
-
-//     //not sure what this is for?
-//     this.editor.getModel()!.setEOL(monaco.editor.EndOfLineSequence.LF);
-
-//     (window as any).addEventListener("resize", () => this.editor.layout());
-
-//     this.props.onEditor(this.editor);
-//   }
-
-//   render() {
-//     return <div id="monacoEditor"></div>;
-//   }
-// }
