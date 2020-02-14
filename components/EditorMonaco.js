@@ -37,9 +37,9 @@ const Editor = ({ gistID, gists, currentLine }) => {
     });
   }
 
-  useEffect(() => {
-    editorRef.current.getValue();
-  }, [currentLine, editorRef]);
+  // useEffect(() => {
+  //   editorRef.current.getValue();
+  // }, [currentLine, editorRef]);
 
   const setCursor = (lineNumber, column) => {
     let cursor = {
