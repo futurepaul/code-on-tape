@@ -28,6 +28,13 @@ const AppState = props => {
     });
   };
 
+  const saveEventLog = events => {
+    dispatch({
+      type: SAVE_EVENTS,
+      payload: events
+    });
+  };
+
   const setRecording = recording => {
     if (recording) {
       dispatch({
@@ -69,6 +76,7 @@ const AppState = props => {
         startTime: state.startTime,
         playbackIndex: state.playbackIndex,
         addEvent,
+        saveEventLog,
         setRecording,
         setStartTime,
 

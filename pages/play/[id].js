@@ -1,13 +1,11 @@
 import { myFakeJson } from "../../fake_data";
-import Editor from "../../components/Editor/Editor";
+import Play from "../../components/Play";
 
-const Play = ({ gistID, gists }) => {
-  return (
-    <Editor value={gists[0].content} cursor={{ lineNumber: 5, column: 0 }} />
-  );
+const PlayUuid = ({ gistID, files }) => {
+  return <Play gistID={gistID} files={files} />;
 };
 
-Play.getInitialProps = async ctx => {
+PlayUuid.getInitialProps = async ctx => {
   let query = ctx.query.id;
   try {
     // let url = `https://api.github.com/gists/${query}?client_id=${client_id}&client_secret=${client_secret}`;
@@ -16,15 +14,15 @@ Play.getInitialProps = async ctx => {
     // let gistFiles = json.files;
 
     // let gists = Object.keys(gistFiles).map(key => gistFiles[key]);
-    let gists = myFakeJson;
-    return { gistID: query, gists: gists };
+    let files = myFakeJson;
+    return { gistID: query, files: files };
   } catch (error) {
     console.error(error);
     return {
       gistID: null,
-      gists: null
+      files: null
     };
   }
 };
 
-export default Play;
+export default PlayUuid;

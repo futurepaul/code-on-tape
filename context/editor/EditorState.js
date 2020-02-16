@@ -4,7 +4,7 @@ import Router from "next/router";
 import EditorContext from "./editorContext";
 import EditorReducer from "./editorReducer";
 
-import { SET_CURRENT_LINE, SET_GIST_ID, SET_GISTS } from "../types";
+import { SET_CURRENT_LINE, SET_GIST_ID, SET_GISTS, SET_EVENTS } from "../types";
 
 // const client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
 // const client_secret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
@@ -29,7 +29,8 @@ const EditorState = props => {
     currentLine: "",
     gistID: "",
     gists: [],
-    activeTab: 0
+    activeTab: 0,
+    events: []
   };
 
   const [state, dispatch] = useReducer(EditorReducer, initialState);
@@ -72,16 +73,26 @@ const EditorState = props => {
     });
   };
 
+  const saveEventLog = events => {
+    dispatch({
+      type: SET_EVENTS,
+      payload: events
+    });
+  };
+
   return (
     <EditorContext.Provider
       value={{
         value: state.value,
+        events: state.events,
         currentLine: state.currentLine,
         gists: state.gists,
+        gistID: state.gistID,
         activeTab: state.activeTab,
         setCurrentLine,
         setGistID,
-        setGists
+        setGists,
+        saveEventLog
       }}
     >
       {props.children}

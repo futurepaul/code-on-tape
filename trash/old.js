@@ -39,10 +39,10 @@ const Play = ({ gistID, gists }) => {
   if (gists != null) {
     return (
       <div>
-        {/* <AudioPlayer
+        <AudioPlayer
           onTimeUpdate={onTimeUpdate}
           audioSrcUrl="coloradogirl.mp3"
-        /> */}
+        />
 
         {/* <EditorMonaco gistID={gistID} gists={gists} currentLine={currentLine} /> */}
         <Editor

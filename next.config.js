@@ -6,23 +6,11 @@ const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 module.exports = withCSS({
   // webpack: (config, options) => {
   webpack: config => {
-    config.module.rules = [
-      ...config.module.rules,
-      {
-        test: /\.ttf$/,
-        use: ["file-loader?outputPath=static/css&publicPath=/_next/static/css"]
-      },
-      {
-        test: /\.(gif|png|jpe?g|svg)$/i,
-        use: ["url-loader"]
-      }
-    ];
-
     config.plugins.push(
       new MonacoWebpackPlugin({
-        languages: [],
         publicPath: "",
-        filename: `static/[name].worker.js`
+        filename: `static/[name].worker.js`,
+        features: ["wordHighlighter", "bracketMatching"]
       })
     );
 

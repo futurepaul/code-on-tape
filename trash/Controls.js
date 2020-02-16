@@ -4,12 +4,12 @@ import EditorContext from "../context/editor/editorContext";
 import useRecorder from "../hooks/useRecorder.ts";
 import AppContext from "../context/app/appContext";
 
-const Controls = () => {
+const Controls = ({ gistID }) => {
   const editorContext = useContext(EditorContext);
   const appContext = useContext(AppContext);
 
   const { setRecording, events, recording } = appContext;
-  const { gistID, value } = editorContext;
+  // const { gistID, value } = editorContext;
 
   let [
     audioURL,
@@ -55,7 +55,7 @@ const Controls = () => {
 
         <button onClick={playAudio}>Play</button>
         <button onClick={exportJson}>Export</button>
-        <Link href="/play">
+        <Link href={`/play/${gistID}`}>
           <button>Go to player</button>
         </Link>
         <audio ref={audioPlayerEl} src={audioURL} />
@@ -63,6 +63,9 @@ const Controls = () => {
       <style jsx>{`
         .recording {
           background-color: red;
+        }
+        .controls {
+          padding: 1rem;
         }
       `}</style>
     </>

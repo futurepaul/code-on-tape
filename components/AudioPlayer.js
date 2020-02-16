@@ -96,9 +96,6 @@ const AudioPlayer = ({ audioSrcUrl, onTimeUpdate }) => {
           flex-direction: row;
           justify-content: flex-start;
           align-items: center;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-            Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-          background-color: white;
         }
 
         input[type="range"] {
@@ -123,7 +120,7 @@ const AudioPlayer = ({ audioSrcUrl, onTimeUpdate }) => {
         input[type="range"]::-webkit-slider-runnable-track {
           height: calc(1rem + 2px);
           box-shadow: 3px 3px grey;
-          background-image: url(svg/square.svg);
+          background-image: url(/svg/square.svg);
           background-size: var(--load-percentage) 100px;
           background-repeat: no-repeat;
           border-radius: 0px;
@@ -133,7 +130,7 @@ const AudioPlayer = ({ audioSrcUrl, onTimeUpdate }) => {
         input[type="range"]::-moz-range-track {
           height: calc(1rem + 2px);
           box-shadow: 3px 3px grey;
-          background-image: url(svg/square.svg);
+          background-image: url(/svg/square.svg);
           background-size: var(--load-percentage) 100px;
           background-repeat: no-repeat;
           border-radius: 0px;
@@ -175,23 +172,23 @@ const AudioPlayer = ({ audioSrcUrl, onTimeUpdate }) => {
         button.play {
           padding-left: 0rem;
           background-color: black;
-          -webkit-mask: url(svg/sharp-play_arrow-24px.svg) no-repeat 50% 50%;
-          mask: url(svg/sharp-play_arrow-24px.svg) no-repeat 50% 50%;
+          -webkit-mask: url(/svg/sharp-play_arrow-24px.svg) no-repeat 50% 50%;
+          mask: url(/svg/sharp-play_arrow-24px.svg) no-repeat 50% 50%;
         }
 
         button.play.playing {
-          -webkit-mask: url(svg/sharp-pause-24px.svg) no-repeat 50% 50%;
-          mask: url(svg/sharp-pause-24px.svg) no-repeat 50% 50%;
+          -webkit-mask: url(/svg/sharp-pause-24px.svg) no-repeat 50% 50%;
+          mask: url(/svg/sharp-pause-24px.svg) no-repeat 50% 50%;
         }
 
         button.mute {
-          -webkit-mask: url(svg/sharp-volume_up-24px.svg) no-repeat 50% 50%;
-          background-image: url(svg/sharp-volume_up-24px.svg);
+          -webkit-mask: url(/svg/sharp-volume_up-24px.svg) no-repeat 50% 50%;
+          background-image: url(/svg/sharp-volume_up-24px.svg);
         }
 
         button.mute.muted {
-          -webkit-mask: url(svg/sharp-volume_off-24px.svg) no-repeat 50% 50%;
-          background-image: url(svg/sharp-volume_off-24px.svg);
+          -webkit-mask: url(/svg/sharp-volume_off-24px.svg) no-repeat 50% 50%;
+          background-image: url(/svg/sharp-volume_off-24px.svg);
         }
       `}</style>
     </>

@@ -17,6 +17,11 @@ export default (state, action) => {
       } else {
         return state;
       }
+    case SAVE_EVENTS:
+      return {
+        ...state,
+        events: action.payload
+      };
     case SET_RECORDING:
       if (action.payload) {
         return {

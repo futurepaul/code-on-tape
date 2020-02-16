@@ -1,7 +1,6 @@
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import PropTypes from "prop-types";
 import React from "react";
-// import { noop, processSize } from "./utils";
 
 const noop = () => {};
 
@@ -16,15 +15,7 @@ class MonacoEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      value,
-      language,
-      theme,
-      height,
-      options,
-      width,
-      cursor
-    } = this.props;
+    const { value, language, theme, options, cursor } = this.props;
 
     const { editor } = this;
     const model = editor.getModel();
@@ -50,17 +41,19 @@ class MonacoEditor extends React.Component {
     if (prevProps.theme !== theme) {
       monaco.editor.setTheme(theme);
     }
-    if (editor && (width !== prevProps.width || height !== prevProps.height)) {
-      editor.layout();
-    }
+    // if (editor && (width !== prevProps.width || height !== prevProps.height)) {
+    //   editor.layout();
+    // }
     if (prevProps.options !== options) {
       editor.updateOptions(options);
     }
 
     if (prevProps.cursor && cursor !== prevProps.cursor) {
       this.__prevent_trigger_change_event = true;
-      editor.setPosition(this.props.cursor);
       editor.focus();
+      editor.setPosition(this.props.cursor);
+      editor.revealLineInCenterIfOutsideViewport(this.props.cursor.lineNumber);
+
       this.__prevent_trigger_change_event = false;
     }
   }
@@ -126,19 +119,16 @@ class MonacoEditor extends React.Component {
 
     this._subscription = editor.onDidChangeCursorPosition(event => {
       // console.info(`cursor position changed ${event.position}`);
-      if (!this.__prevent_trigger_change_event) {
+      if (!this.__prevent_trigger_change_event && this.props.cursorChange) {
         this.props.cursorChange(event.position);
       }
     });
   }
 
   render() {
-    const { width, height } = this.props;
-    // const fixedWidth = processSize(width);
-    // const fixedHeight = processSize(height);
     const style = {
       width: "100%",
-      height: "100vh"
+      height: "90vh"
     };
 
     return (
@@ -152,10 +142,9 @@ class MonacoEditor extends React.Component {
 }
 
 MonacoEditor.propTypes = {
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   value: PropTypes.string,
   cursor: PropTypes.object,
+  cursorChange: PropTypes.func,
   defaultValue: PropTypes.string,
   language: PropTypes.string,
   theme: PropTypes.string,
@@ -167,10 +156,9 @@ MonacoEditor.propTypes = {
 };
 
 MonacoEditor.defaultProps = {
-  width: "100%",
-  height: "100%",
   value: null,
   cursor: null,
+  cursorChange: null,
   defaultValue: "",
   language: "javascript",
   theme: null,

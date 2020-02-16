@@ -28,6 +28,7 @@ const Intro = () => {
           background-color: white;
           width: 30rem;
           margin: 0 auto;
+          margin-top: 1em;
           padding: 1rem;
           box-shadow: rgba(200, 200, 200, 0.5) 1px 1px 0.5rem;
         }

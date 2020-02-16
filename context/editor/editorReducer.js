@@ -4,7 +4,8 @@ import {
   SET_CURRENT_LINE,
   ADD_EVENT,
   SET_GIST_ID,
-  SET_GISTS
+  SET_GISTS,
+  SET_EVENTS
 } from "../types";
 
 export default (state, action) => {
@@ -30,6 +31,11 @@ export default (state, action) => {
         ...state,
         gists: action.payload,
         value: action.payload[0].content
+      };
+    case SET_EVENTS:
+      return {
+        ...state,
+        events: action.payload
       };
     default:
       return state;
