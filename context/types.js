@@ -9,3 +9,4 @@ export const SET_START_TIME = "SET_START_TIME";
 export const SET_PLAYING = "SET_PLAYING";
 export const NEXT_PLAYBACK_INDEX = "NEXT_PLAYBACK_INDEX";
 export const SET_EVENTS = "SET_EVENTS";
+export const SET_AUDIO_URL = "SET_AUDIO_URL";

@@ -5,7 +5,8 @@ import {
   ADD_EVENT,
   SET_GIST_ID,
   SET_GISTS,
-  SET_EVENTS
+  SET_EVENTS,
+  SET_AUDIO_URL
 } from "../types";
 
 export default (state, action) => {
@@ -36,6 +37,11 @@ export default (state, action) => {
       return {
         ...state,
         events: action.payload
+      };
+    case SET_AUDIO_URL:
+      return {
+        ...state,
+        audioURL: action.payload
       };
     default:
       return state;

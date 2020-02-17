@@ -34,7 +34,10 @@ const useRecorder: Hook = () => {
     };
 
     recorder.addEventListener("dataavailable", handleData);
-    return () => recorder.removeEventListener("dataavailable", handleData);
+    return () => {
+      recorder.stream.getTracks().forEach(i => i.stop());
+      recorder.removeEventListener("dataavailable", handleData);
+    };
   }, [recorder, isRecording]);
 
   const startRecording = () => {

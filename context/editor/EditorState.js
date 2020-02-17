@@ -4,7 +4,13 @@ import Router from "next/router";
 import EditorContext from "./editorContext";
 import EditorReducer from "./editorReducer";
 
-import { SET_CURRENT_LINE, SET_GIST_ID, SET_GISTS, SET_EVENTS } from "../types";
+import {
+  SET_CURRENT_LINE,
+  SET_GIST_ID,
+  SET_GISTS,
+  SET_EVENTS,
+  SET_AUDIO_URL
+} from "../types";
 
 // const client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
 // const client_secret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
@@ -30,7 +36,8 @@ const EditorState = props => {
     gistID: "",
     gists: [],
     activeTab: 0,
-    events: []
+    events: [],
+    audioURL: ""
   };
 
   const [state, dispatch] = useReducer(EditorReducer, initialState);
@@ -80,6 +87,13 @@ const EditorState = props => {
     });
   };
 
+  const setAudioURL = url => {
+    dispatch({
+      type: SET_AUDIO_URL,
+      payload: url
+    });
+  };
+
   return (
     <EditorContext.Provider
       value={{
@@ -89,10 +103,12 @@ const EditorState = props => {
         gists: state.gists,
         gistID: state.gistID,
         activeTab: state.activeTab,
+        audioURL: state.audioURL,
         setCurrentLine,
         setGistID,
         setGists,
-        saveEventLog
+        saveEventLog,
+        setAudioURL
       }}
     >
       {props.children}

@@ -18,7 +18,7 @@ function decimalToTime(seconds, duration) {
   }
 }
 
-const AudioPlayer = ({ audioSrcUrl, onTimeUpdate }) => {
+const AudioPlayer = ({ audioSrcUrl, onTimeUpdate, onClickPlay }) => {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [timeString, setTimeString] = useState("0:00 / 0:00");
@@ -27,6 +27,7 @@ const AudioPlayer = ({ audioSrcUrl, onTimeUpdate }) => {
   let audioPlayerEl = useRef(null);
 
   const play = () => {
+    onClickPlay();
     if (!playing) {
       audioPlayerEl.current.play();
       setPlaying(true);

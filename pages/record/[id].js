@@ -7,30 +7,57 @@ import { useRouter } from "next/router";
 import { myFakeJson } from "../../fake_data";
 import EditorContext from "../../context/editor/editorContext";
 import Router from "next/router";
+import useRecorder from "../../hooks/useRecorder";
+
+const defaultCursor = { lineNumber: 1, column: 1 };
 
 const Record = ({ gistID, files }) => {
   // App state
-  const [cursor, setCursor] = useState({ lineNumber: 1, column: 1 });
+  const [cursor, setCursor] = useState(defaultCursor);
   const [activeTab, setActiveTab] = useState(0);
+
+  const [perTabCursor, setPerTabCursor] = useState([]);
 
   // Event recording logic
   const [eventLog, setEventLog] = useState(null);
   const [recordingStartTime, setRecordingStartTime] = useState(null);
   const [isRecording, setIsRecording] = useState(null);
-  const [time, setTime] = useState(0);
+  // const [time, setTime] = useState(0);
+
+  // Audio recording
+  let [
+    audioURL,
+    audioBlob,
+    isRecordingAudio,
+    startRecordingAudio,
+    stopRecordingAudio
+  ] = useRecorder();
 
   // Editor context for forwarding state to the playback preview
   const editorContext = useContext(EditorContext);
-  const { setGists, setGistID, saveEventLog } = editorContext;
+  const { setGists, setGistID, saveEventLog, setAudioURL } = editorContext;
+
+  const setTabAndCursor = (tab, cursor) => {
+    console.log(
+      `tab: ${tab}, cursor: { line: ${cursor.lineNumber}, column: ${cursor.column}}`
+    );
+    let tempPerTabCursor = perTabCursor;
+    tempPerTabCursor[tab] = cursor;
+    setPerTabCursor(tempPerTabCursor);
+    setActiveTab(tab);
+    setCursor(cursor);
+  };
 
   const onClickRecord = () => {
     if (!isRecording) {
       setIsRecording(true);
+      startRecordingAudio();
       setEventLog([{ time: 0, cursor: cursor, tab: activeTab }]);
       console.log("Starting recording");
       setRecordingStartTime(performance.now());
     } else {
       setIsRecording(false);
+      stopRecordingAudio();
       console.log("Stopping recording");
       console.log(eventLog);
     }
@@ -46,13 +73,30 @@ const Record = ({ gistID, files }) => {
       };
       setEventLog(eventLog.concat(event));
     }
-    setCursor(newCursor);
+    setTabAndCursor(activeTab, newCursor);
+  };
+
+  const onTabChange = newTabID => {
+    console.log(perTabCursor[newTabID]);
+    let cursor = perTabCursor[newTabID]
+      ? perTabCursor[newTabID]
+      : defaultCursor;
+    if (isRecording) {
+      let event = {
+        time: Math.floor(performance.now() - recordingStartTime),
+        cursor,
+        tab: newTabID
+      };
+      setEventLog(eventLog.concat(event));
+    }
+    setTabAndCursor(newTabID, cursor);
   };
 
   const gotoPlaybackPreview = () => {
     setGists(files);
     setGistID(gistID);
     saveEventLog(eventLog);
+    setAudioURL(audioURL);
     Router.push("/play");
   };
 
@@ -87,10 +131,11 @@ const Record = ({ gistID, files }) => {
           cursor={cursor}
         />
       )}
-      <Tabs activeTab={activeTab} setActiveTab={setActiveTab} files={files} />
+      <Tabs activeTab={activeTab} setActiveTab={onTabChange} files={files} />
       <RecordEditor
         gist={files}
         tabID={activeTab}
+        cursor={cursor}
         onCursorChange={onCursorChange}
       />
     </div>

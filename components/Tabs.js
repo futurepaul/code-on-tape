@@ -28,6 +28,7 @@ const Tab = ({ onClick, active, children }) => {
 };
 
 const Tabs = ({ files, activeTab, setActiveTab }) => {
+  console.log(`activeTab: ${activeTab}`);
   return (
     <>
       <div className="nav">

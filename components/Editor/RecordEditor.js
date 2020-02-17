@@ -8,7 +8,8 @@ if (process.browser && !MonacoEditor) {
   });
 }
 
-const RecordEditor = ({ gist, tabID, onCursorChange }) => {
+const RecordEditor = ({ gist, tabID, cursor, onCursorChange }) => {
+  console.log(`RecordEditor active tab: ${tabID}`);
   if (!MonacoEditor) {
     return <div></div>;
   }
@@ -26,6 +27,7 @@ const RecordEditor = ({ gist, tabID, onCursorChange }) => {
           readOnly: true
         }}
         editorDidMount={e => console.log(e)}
+        cursor={cursor}
         cursorChange={onCursorChange}
       />
     </div>

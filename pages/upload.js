@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import EditorContext from "../context/editor/editorContext";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 const ProgressBar = ({ progress }) => (
   <div>
@@ -27,22 +28,28 @@ const Upload = () => {
   // Upload state
   const [success, setSuccess] = useState(false);
   const [url, setUrl] = useState("");
-  const [uploadInput, setUploadInput] = useState({});
+  // const [uploadInput, setUploadInput] = useState({});
   const [hover, setHovering] = useState(false);
   const [uploadPercent, setUploadPercent] = useState(0.0);
 
+  // Generate Uuid
+  const uuid = uuidv4();
+
   const handleUpload = ev => {
-    let file = uploadInput[0];
-    console.log(file);
+    // let file = uploadInput[0];
+    let events_json = JSON.stringify(events);
+    console.log(events_json);
     // Split the filename to get the name and type
-    let fileParts = uploadInput[0].name.split(".");
-    let fileName = fileParts[0];
-    let fileType = fileParts[1];
+    // let fileParts = uploadInput[0].name.split(".");
+    // let fileName = fileParts[0];
+    // let fileType = fileParts[1];
+    let events_file_name = `${uuid}_events.json`;
+    let events_file_type = "application/json";
     console.log("Preparing the upload");
     axios
       .post("./api/upload", {
-        fileName: fileName,
-        fileType: fileType
+        fileName: events_file_name,
+        fileType: events_file_type
       })
       .then(response => {
         console.log(response);
@@ -55,13 +62,13 @@ const Upload = () => {
         // Put the fileType in the headers for the upload
 
         axios
-          .put(signedRequest, file, {
+          .put(signedRequest, events_json, {
             onUploadProgress: progressEvent => {
               const { loaded, total } = progressEvent;
               setUploadPercent(Math.round((loaded * 100.0) / total));
             },
             headers: {
-              "Content-Type": fileType,
+              "Content-Type": events_file_type,
               "x-amz-acl": "public-read"
             }
           })
@@ -83,16 +90,20 @@ const Upload = () => {
     return <div>Not sure how you got here, but I hope everything's okay!</div>;
   } else {
     return (
-      <ul>
-        {events.map((e, i) => {
-          let cursor = e.cursor;
-          return (
-            <li
-              key={i}
-            >{`line: ${cursor.lineNumber}, column: ${cursor.column}, tab: ${e.tab} time: ${e.time}`}</li>
-          );
-        })}
-      </ul>
+      <div>
+        <button onClick={handleUpload}>Upload!</button>
+        <ProgressBar progress={uploadPercent} />
+        <ul>
+          {events.map((e, i) => {
+            let cursor = e.cursor;
+            return (
+              <li
+                key={i}
+              >{`line: ${cursor.lineNumber}, column: ${cursor.column}, tab: ${e.tab} time: ${e.time}`}</li>
+            );
+          })}
+        </ul>
+      </div>
     );
   }
 };

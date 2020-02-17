@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const PlayWithState = () => {
   const editorContext = useContext(EditorContext);
-  const { gists, gistID, events } = editorContext;
+  const { audioURL, gists, gistID, events } = editorContext;
 
   if (!gists || gists.length == 0) {
     console.log(gists);
@@ -35,7 +35,12 @@ const PlayWithState = () => {
             `}
           </style>
         </WarningBanner>
-        <Play gistID={gistID} files={gists} eventLog={events} />
+        <Play
+          gistID={gistID}
+          files={gists}
+          eventLog={events}
+          audio={audioURL}
+        />
       </div>
     );
   }
