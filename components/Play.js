@@ -3,7 +3,30 @@ import PlaybackEditor from "../components/Editor/PlaybackEditor";
 import AudioPlayer from "../components/AudioPlayer";
 import Tabs from "../components/Tabs";
 
-function findClosestEvent(scrubTime, events) {}
+function findClosestEvent(scrubTime, events) {
+  const length = events.length;
+  const totalTime = events[length - 1].time;
+  let guess = Math.floor((scrubTime / totalTime) * length);
+
+  console.log(`length: ${length}, totalTime: ${totalTime}, guess: ${guess}`);
+
+  while (guess > 0 && guess < length - 1) {
+    if (
+      scrubTime <= events[guess + 1].time &&
+      scrubTime >= events[guess].time
+    ) {
+      break;
+    } else if (scrubTime > events[guess + 1].time) {
+      guess += 1;
+    } else if (scrubTime < events[guess].time) {
+      guess -= 1;
+    } else {
+      break;
+    }
+  }
+
+  return Math.min(guess, length - 1);
+}
 
 function useInterval(callback, delay) {
   const savedCallback = useRef();
@@ -91,9 +114,11 @@ const Play = ({ gistID, files, eventLog, audio }) => {
   const onTimeUpdate = t => {
     console.log(t);
     let ms = Math.round(t * 1000);
-    if (ms < eventLog[index].time) {
-    } else if (ms > eventLog[index].time) {
-    }
+    let newIndex = findClosestEvent(ms, eventLog);
+    console.log(newIndex);
+    let event = eventLog[newIndex];
+    setCursor(event.cursor);
+    setActiveTab(event.tab);
     // let index = Math.round(t);
     // if (index < eventLog.length) {
     //   let event = eventLog[Math.round(t)];
