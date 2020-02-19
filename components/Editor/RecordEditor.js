@@ -9,7 +9,7 @@ if (process.browser && !MonacoEditor) {
 }
 
 const RecordEditor = ({ gist, tabID, cursor, onCursorChange }) => {
-  console.log(`RecordEditor active tab: ${tabID}`);
+  // console.log(`RecordEditor active tab: ${tabID}`);
   if (!MonacoEditor) {
     return <div></div>;
   }

@@ -50,7 +50,7 @@ class MonacoEditor extends React.Component {
 
     if (prevProps.cursor && cursor !== prevProps.cursor) {
       this.__prevent_trigger_change_event = true;
-      // editor.focus();
+      editor.focus();
       editor.setPosition(this.props.cursor);
       editor.revealLineInCenterIfOutsideViewport(this.props.cursor.lineNumber);
 

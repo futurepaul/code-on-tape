@@ -18,7 +18,13 @@ function decimalToTime(seconds, duration) {
   }
 }
 
-const AudioPlayer = ({ audioSrcUrl, onTimeUpdate, onClickPlay }) => {
+const AudioPlayer = ({
+  audioSrcUrl,
+  onTimeUpdate,
+  onClickPlay,
+  onMouseDown,
+  onMouseUp
+}) => {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [timeString, setTimeString] = useState("0:00 / 0:00");
@@ -48,6 +54,8 @@ const AudioPlayer = ({ audioSrcUrl, onTimeUpdate, onClickPlay }) => {
 
     // Report back to our parent
     onTimeUpdate(audio.currentTime);
+
+    console.log("current time:" + audio.currentTime);
 
     let time = `${decimalToTime(
       audio.currentTime,
@@ -87,6 +95,8 @@ const AudioPlayer = ({ audioSrcUrl, onTimeUpdate, onClickPlay }) => {
           step=".1"
           onInput={playHeadInput}
           onChange={() => {}}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
         />
         <button className={`mute ${muted && "muted"}`} onClick={mute}></button>
       </div>

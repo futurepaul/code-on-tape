@@ -35,7 +35,13 @@ const Record = ({ gistID, files }) => {
 
   // Editor context for forwarding state to the playback preview
   const editorContext = useContext(EditorContext);
-  const { setGists, setGistID, saveEventLog, setAudioURL } = editorContext;
+  const {
+    setGists,
+    setGistID,
+    saveEventLog,
+    setAudioURL,
+    setAudioBlob
+  } = editorContext;
 
   const setTabAndCursor = (tab, cursor) => {
     console.log(
@@ -97,6 +103,7 @@ const Record = ({ gistID, files }) => {
     setGistID(gistID);
     saveEventLog(eventLog);
     setAudioURL(audioURL);
+    setAudioBlob(audioBlob);
     Router.push("/play");
   };
 
@@ -149,13 +156,13 @@ const client_secret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
 Record.getInitialProps = async ctx => {
   let query = ctx.query.id;
   try {
-    // let url = `https://api.github.com/gists/${query}?client_id=${client_id}&client_secret=${client_secret}`;
-    // const res = await fetch(url);
-    // let json = await res.json();
-    // let gistFiles = json.files;
+    let url = `https://api.github.com/gists/${query}?client_id=${client_id}&client_secret=${client_secret}`;
+    const res = await fetch(url);
+    let json = await res.json();
+    let gistFiles = json.files;
 
-    // let gists = Object.keys(gistFiles).map(key => gistFiles[key]);
-    let files = myFakeJson;
+    let files = Object.keys(gistFiles).map(key => gistFiles[key]);
+    // let files = myFakeJson;
     return { gistID: query, files: files };
   } catch (error) {
     console.error(error);

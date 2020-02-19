@@ -6,7 +6,8 @@ import {
   SET_GIST_ID,
   SET_GISTS,
   SET_EVENTS,
-  SET_AUDIO_URL
+  SET_AUDIO_URL,
+  SET_AUDIO_BLOB
 } from "../types";
 
 export default (state, action) => {
@@ -42,6 +43,11 @@ export default (state, action) => {
       return {
         ...state,
         audioURL: action.payload
+      };
+    case SET_AUDIO_BLOB:
+      return {
+        ...state,
+        audioBlob: action.payload
       };
     default:
       return state;

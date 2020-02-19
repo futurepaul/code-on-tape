@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
-type Hook = () => [string, any, boolean, () => void, () => void];
+// type Hook = () => [string, any, boolean, () => void, () => void];
 
-const useRecorder: Hook = () => {
-  const [audioURL, setAudioURL] = useState<string>("");
-  const [audioBlob, setAudioBlob] = useState<any>(null);
-  const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
+const useRecorder = () => {
+  const [audioURL, setAudioURL] = useState("");
+  const [audioBlob, setAudioBlob] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recorder, setRecorder] = useState(null);
 
   useEffect(() => {
     // Lazily obtain recorder first time we're recording.
@@ -28,7 +28,7 @@ const useRecorder: Hook = () => {
     }
 
     // Obtain the audio when ready.
-    const handleData = (e: any) => {
+    const handleData = e => {
       setAudioURL(URL.createObjectURL(e.data));
       setAudioBlob(e.data);
     };
@@ -53,6 +53,7 @@ const useRecorder: Hook = () => {
 
 async function requestRecorder() {
   let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  return new MediaRecorder(stream);
+  const mimeType = "audio/ogg";
+  return new MediaRecorder(stream, { type: mimeType });
 }
 export default useRecorder;

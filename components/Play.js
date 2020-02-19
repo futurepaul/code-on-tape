@@ -8,7 +8,7 @@ function findClosestEvent(scrubTime, events) {
   const totalTime = events[length - 1].time;
   let guess = Math.floor((scrubTime / totalTime) * length);
 
-  console.log(`length: ${length}, totalTime: ${totalTime}, guess: ${guess}`);
+  // console.log(`length: ${length}, totalTime: ${totalTime}, guess: ${guess}`);
 
   while (guess > 0 && guess < length - 1) {
     if (
@@ -54,7 +54,7 @@ function calculateDelay(startTime, stamp) {
   if (delay < 1) {
     delay = 1;
   }
-  console.log(`delay: ${delay}, ct: ${currentTime}, st: ${startTime}`);
+  // console.log(`delay: ${delay}, ct: ${currentTime}, st: ${startTime}`);
   return delay;
 }
 
@@ -68,6 +68,7 @@ const Play = ({ gistID, files, eventLog, audio }) => {
   // const [recording, setRecording] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [interval, setNextInterval] = useState(0);
+  const [isScrubbing, setIsScrubbing] = useState(false);
   // const [playheadTime, setPlayheadTime] = useState(0);
 
   // Current playback state
@@ -76,7 +77,7 @@ const Play = ({ gistID, files, eventLog, audio }) => {
   const [index, setIndex] = useState(0);
 
   const startPlaying = () => {
-    console.log(eventLog);
+    // console.log(eventLog);
     if (!playing) {
       setNextInterval(eventLog[1].time);
       // setColor(eventLog[0].color);
@@ -92,7 +93,7 @@ const Play = ({ gistID, files, eventLog, audio }) => {
   useInterval(
     () => {
       // setPlayheadTime(performance.now() - playbackStartTime);
-      console.log(eventLog[index]);
+      // console.log(eventLog[index]);
       if (index + 1 < eventLog.length) {
         let currentEvent = eventLog[index];
         setCursor(currentEvent.cursor);
@@ -112,13 +113,19 @@ const Play = ({ gistID, files, eventLog, audio }) => {
   );
 
   const onTimeUpdate = t => {
-    console.log(t);
-    let ms = Math.round(t * 1000);
-    let newIndex = findClosestEvent(ms, eventLog);
-    console.log(newIndex);
-    let event = eventLog[newIndex];
-    setCursor(event.cursor);
-    setActiveTab(event.tab);
+    // console.log(t);
+
+    if (isScrubbing) {
+      let ms = Math.round(t * 1000);
+      let newIndex = findClosestEvent(ms, eventLog);
+      // console.log(newIndex);
+      let event = eventLog[newIndex];
+      setCursor(event.cursor);
+      setActiveTab(event.tab);
+    } else {
+      // console.log("not scrubbing!");
+    }
+
     // let index = Math.round(t);
     // if (index < eventLog.length) {
     //   let event = eventLog[Math.round(t)];
@@ -136,6 +143,8 @@ const Play = ({ gistID, files, eventLog, audio }) => {
         onTimeUpdate={onTimeUpdate}
         onClickPlay={startPlaying}
         audioSrcUrl={audio ? audio : "/coloradogirl.mp3"}
+        onMouseDown={() => setIsScrubbing(true)}
+        onMouseUp={() => setIsScrubbing(false)}
       />
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} files={files} />
       <PlaybackEditor gist={files} tabID={activeTab} cursor={cursor} />

@@ -23,7 +23,8 @@ const PlaybackEditor = ({ gist, tabID, cursor }) => {
         options={{
           minimap: { enabled: false },
           automaticLayout: true,
-          readOnly: true
+          readOnly: true,
+          wordWrap: "on"
         }}
         editorDidMount={e => console.log(e)}
       />

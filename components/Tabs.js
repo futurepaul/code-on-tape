@@ -28,7 +28,7 @@ const Tab = ({ onClick, active, children }) => {
 };
 
 const Tabs = ({ files, activeTab, setActiveTab }) => {
-  console.log(`activeTab: ${activeTab}`);
+  // console.log(`activeTab: ${activeTab}`);
   return (
     <>
       <div className="nav">
@@ -50,6 +50,12 @@ const Tabs = ({ files, activeTab, setActiveTab }) => {
           align-items: flex-end;
           border-bottom: 2px solid black;
           padding-left: 1rem;
+          overflow: scroll;
+          scrollbar-width: none;
+        }
+        ::-webkit-scrollbar {
+          width: 0px; /* Remove scrollbar space */
+          height: 0px;
         }
       `}</style>
     </>

@@ -9,7 +9,8 @@ import {
   SET_GIST_ID,
   SET_GISTS,
   SET_EVENTS,
-  SET_AUDIO_URL
+  SET_AUDIO_URL,
+  SET_AUDIO_BLOB
 } from "../types";
 
 // const client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
@@ -37,7 +38,8 @@ const EditorState = props => {
     gists: [],
     activeTab: 0,
     events: [],
-    audioURL: ""
+    audioURL: "",
+    audioBlob: null
   };
 
   const [state, dispatch] = useReducer(EditorReducer, initialState);
@@ -94,6 +96,13 @@ const EditorState = props => {
     });
   };
 
+  const setAudioBlob = blob => {
+    dispatch({
+      type: SET_AUDIO_BLOB,
+      payload: blob
+    });
+  };
+
   return (
     <EditorContext.Provider
       value={{
@@ -104,11 +113,13 @@ const EditorState = props => {
         gistID: state.gistID,
         activeTab: state.activeTab,
         audioURL: state.audioURL,
+        audioBlob: state.audioBlob,
         setCurrentLine,
         setGistID,
         setGists,
         saveEventLog,
-        setAudioURL
+        setAudioURL,
+        setAudioBlob
       }}
     >
       {props.children}

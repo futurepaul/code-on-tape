@@ -8,7 +8,10 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <AppState>
       <EditorState>
-        <Component {...pageProps} />
+        <main>
+          <Component {...pageProps} />
+        </main>
+        <style jsx>{``}</style>
       </EditorState>
     </AppState>
   );
