@@ -1,10 +1,10 @@
 {
   "build": {
     "env": {
-      "SpacesEndpoint": "@SpacesEndpoint",
-      "SpacesAccessKeyId": "@SpacesAccessKeyId",
-      "SpacesSecretKey": "@SpacesSecretKey",
-      "Bucket": "@Bucket"
+      "SpacesEndpoint": "@spacesendpoint",
+      "SpacesAccessKeyId": "@spacesaccesskeyid",
+      "SpacesSecretKey": "@spacessecretkey",
+      "Bucket": "@bucket"
     }
   }
 }
