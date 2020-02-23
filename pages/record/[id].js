@@ -150,8 +150,8 @@ const Record = ({ gistID, files }) => {
   );
 };
 
-const client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
-const client_secret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
+const client_id = process.env.GITHUB_CLIENT_ID;
+const client_secret = process.env.GITHUB_CLIENT_SECRET;
 // const query = "7c09ce3491dcfb9ca103bc46127435d4";
 
 Record.getInitialProps = async ctx => {

@@ -2,21 +2,16 @@ import aws from "aws-sdk";
 import dotenv from "dotenv";
 dotenv.config();
 
-console.log(process.env.spacesendpoint);
-console.log(process.env.bucket);
-console.log(process.env.spacesaccesskeyid);
-console.log(process.env.spacessecretkey);
-
-const endpointUrl = process.env.spacesendpoint;
+const endpointUrl = process.env.SPACES_ENDPOINT;
 
 const spacesEndpoint = new aws.Endpoint(endpointUrl);
 
-const BUCKET = process.env.bucket;
+const BUCKET = process.env.BUCKET;
 
 const config = {
   endpoint: spacesEndpoint,
-  accessKeyId: process.env.spacesaccesskeyid,
-  secretAccessKey: process.env.spacessecretkey,
+  accessKeyId: process.env.SPACES_ACCESS_KEY_ID,
+  secretAccessKey: process.env.SPACES_SECRET_KEY,
   region: "sfo2",
   signatureVersion: "v4"
 };

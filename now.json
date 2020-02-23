@@ -1,10 +1,12 @@
 {
   "build": {
     "env": {
-      "SpacesEndpoint": "@spacesendpoint",
-      "SpacesAccessKeyId": "@spacesaccesskeyid",
-      "SpacesSecretKey": "@spacessecretkey",
-      "Bucket": "@bucket"
+      "SPACES_ENDPOINT": "@spacesendpoint",
+      "SPACES_ACCESS_KEY_ID": "@spacesaccesskeyid",
+      "SPACES_SECRET_KEY": "@spacessecretkey",
+      "BUCKET": "@bucket",
+      "REACT_APP_GITHUB_CLIENT_ID": "@github_client_id",
+      "REACT_APP_GITHUB_CLIENT_SECRET": "@github_client_secret"
     }
   }
 }
