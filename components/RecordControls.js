@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useEffect } from "react";
+import Help from "./Help";
 
 const Meter = ({ level }) => {
   let ref = useRef();
@@ -38,19 +39,42 @@ const RecordControls = ({ onClickRecord, isRecording, cursor }) => {
   return (
     <>
       <div className="controls">
-        <button className={isRecording && "active"} onClick={onClickRecord}>
-          {isRecording ? "Stop Recording" : "Record"}
-        </button>
-        <div className="time">0:00</div>
-        <ProgressBar progress={90} className="progress" />
-        <div>{`line: ${cursor.lineNumber} column: ${cursor.column}`}</div>
+        <div className="actual-controls">
+          <button className={isRecording && "active"} onClick={onClickRecord}>
+            {isRecording ? "Stop Recording" : "Record"}
+          </button>
+          <div className="time">0:00</div>
+          <ProgressBar progress={90} className="progress" />
+          <div>{`line: ${cursor.lineNumber} column: ${cursor.column}`}</div>
+        </div>
+
+        <div className="spacer"></div>
+        <Help>
+          <strong>Help</strong>
+          <p>
+            Click <em>Record</em> to start recording your audio annotation. Then
+            start clicking through your code so people know where you're at.
+          </p>
+          <p>
+            Once you're done recording, click <em>Stop Recording</em> and you'll
+            get a chance to preview your recording before uploading.
+          </p>
+        </Help>
       </div>
       <style jsx>{`
+        .actual-controls {
+          flex-size: 10;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+
         .controls {
           width: 100%;
           display: flex;
           flex-direction: row;
-          justify-content: flex-start;
+          justify-content: space-between;
           align-items: center;
         }
         .time {
