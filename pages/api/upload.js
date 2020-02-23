@@ -2,8 +2,8 @@ import aws from "aws-sdk";
 import dotenv from "dotenv";
 dotenv.config();
 
-console.log(endpointUrl);
-console.log(bucket);
+console.log(process.env.spacesendpoint);
+console.log(process.env.bucket);
 console.log(process.env.spacesaccesskeyid);
 console.log(process.env.spacessecretkey);
 
