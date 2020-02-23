@@ -3,3 +3,4 @@ package.json.hash
 node_modules
 .env.local
 public/coloradogirl.mp3
+trash/

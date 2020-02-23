@@ -1,5 +1,4 @@
 import React, { useReducer } from "react";
-import fetch from "isomorphic-unfetch";
 import Router from "next/router";
 import EditorContext from "./editorContext";
 import EditorReducer from "./editorReducer";

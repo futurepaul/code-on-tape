@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { myFakeJson } from "../../fake_data";
 import EditorContext from "../../context/editor/editorContext";
 import Router from "next/router";
+import fetch from "isomorphic-unfetch";
 import useRecorder from "../../hooks/useRecorder";
 
 const defaultCursor = { lineNumber: 1, column: 1 };

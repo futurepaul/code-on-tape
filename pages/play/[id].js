@@ -1,4 +1,5 @@
 import { myFakeJson } from "../../fake_data";
+import fetch from "isomorphic-unfetch";
 import Play from "../../components/Play";
 
 const PlayUuid = ({ gistID, files, audioURL, events }) => {
