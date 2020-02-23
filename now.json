@@ -5,8 +5,8 @@
       "SPACES_ACCESS_KEY_ID": "@spacesaccesskeyid",
       "SPACES_SECRET_KEY": "@spacessecretkey",
       "BUCKET": "@bucket",
-      "REACT_APP_GITHUB_CLIENT_ID": "@github_client_id",
-      "REACT_APP_GITHUB_CLIENT_SECRET": "@github_client_secret"
+      "GITHUB_CLIENT_ID": "@github_client_id",
+      "GITHUB_CLIENT_SECRET": "@github_client_secret"
     }
   }
 }
