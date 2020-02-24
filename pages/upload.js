@@ -75,12 +75,14 @@ const Upload = () => {
   const [urls, setUrls] = useState({ events: null, audio: null });
   const [eventsUrl, setEventsUrl] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [gistsUrl, setGistsUrl] = useState(null);
+  const [playbackUrl, setPlaybackUrl] = useState(null);
 
   // Generate Uuid
   const uuid = uuidv4();
 
   const handleUpload = ev => {
-    //Upload the json
+    //Upload the events json
     let events_json = JSON.stringify(events);
     let events_file_name = `${uuid}/events.json`;
     let events_file_type = "application/json";
@@ -91,6 +93,20 @@ const Upload = () => {
       setUploadPercent,
       setSuccess,
       setEventsUrl
+    );
+
+    //Upload the gists json
+    let gists_json = JSON.stringify({ gists, gistID });
+    let gists_file_name = `${uuid}/gist.json`;
+    let gists_file_type = "application/json";
+
+    fileUpload(
+      gists_file_name,
+      gists_file_type,
+      gists_json,
+      setUploadPercent,
+      setSuccess,
+      setGistsUrl
     );
 
     //Upload the mp3
@@ -104,6 +120,8 @@ const Upload = () => {
       setSuccess,
       setAudioUrl
     );
+
+    setPlaybackUrl(`/play/${uuid}`);
   };
 
   if (!gists || gists.length == 0) {
@@ -117,6 +135,8 @@ const Upload = () => {
         <div>
           <p>{eventsUrl && <a href={eventsUrl}>events</a>}</p>
           <p>{audioUrl && <a href={audioUrl}>audio</a>}</p>
+          <p>{gistsUrl && <a href={gistsUrl}>gist</a>}</p>
+          <p>{playbackUrl && <a href={playbackUrl}>actual playback url</a>}</p>
         </div>
         <ul>
           {events.map((e, i) => {

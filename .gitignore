@@ -1,7 +1,9 @@
 .next/
 package.json.hash
 node_modules
+.env.build
 .env.local
 .env
 public/coloradogirl.mp3
 trash/
+.now

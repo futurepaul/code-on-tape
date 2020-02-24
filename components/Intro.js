@@ -35,6 +35,13 @@ const Intro = () => {
             ></input>
             <button>Get gist</button>
           </form>
+          <p>
+            (I usually use{" "}
+            <a href="https://gist.github.com/futurepaul/f1cf2fce2af511b649afac5f3b21e9f5">
+              this gist
+            </a>{" "}
+            for testing.)
+          </p>
         </div>
       </div>
       <style jsx>{`
