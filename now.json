@@ -2,8 +2,8 @@
   "build": {
     "env": {
       "SPACES_ENDPOINT": "@spacesendpoint",
-      "SPACES_ACCESS_KEY_ID": "@spacesaccesskeyid",
-      "SPACES_SECRET_KEY": "@spacessecretkey",
+      "SPACES_ACCESS_KEY_ID": "@spaces_access_key_id",
+      "SPACES_SECRET_KEY": "@spaces_secret_key",
       "BUCKET": "@bucket",
       "GITHUB_CLIENT_ID": "@github_client_id",
       "GITHUB_CLIENT_SECRET": "@github_client_secret"
