@@ -9,6 +9,7 @@ if (process.browser && !MonacoEditor) {
 }
 
 const PlaybackEditor = ({ gist, tabID, cursor }) => {
+  //
   if (!MonacoEditor) {
     return <div></div>;
   }
@@ -19,14 +20,13 @@ const PlaybackEditor = ({ gist, tabID, cursor }) => {
         language="javascript"
         theme="vs-light"
         value={gist[tabID].content}
-        cursor={cursor}
         options={{
+          selectOnLineNumbers: true,
           minimap: { enabled: false },
           automaticLayout: true,
-          readOnly: true,
-          wordWrap: "on"
+          readOnly: true
         }}
-        editorDidMount={e => console.log(e)}
+        cursor={cursor}
       />
     </div>
   );

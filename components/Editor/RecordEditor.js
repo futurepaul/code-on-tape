@@ -26,7 +26,6 @@ const RecordEditor = ({ gist, tabID, cursor, onCursorChange }) => {
           automaticLayout: true,
           readOnly: true
         }}
-        editorDidMount={e => console.log(e)}
         cursor={cursor}
         cursorChange={onCursorChange}
       />

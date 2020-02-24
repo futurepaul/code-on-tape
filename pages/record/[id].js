@@ -45,11 +45,23 @@ const Record = ({ gistID, files }) => {
   } = editorContext;
 
   const setTabAndCursor = (tab, cursor) => {
+    if (isRecording) {
+      let event = {
+        time: Math.floor(performance.now() - recordingStartTime),
+        cursor,
+        tab
+      };
+      setEventLog(eventLog.concat(event));
+    }
+
     console.log(
       `tab: ${tab}, cursor: { line: ${cursor.lineNumber}, column: ${cursor.column}}`
     );
     let tempPerTabCursor = perTabCursor;
     tempPerTabCursor[tab] = cursor;
+
+    console.log(tempPerTabCursor);
+
     setPerTabCursor(tempPerTabCursor);
     setActiveTab(tab);
     setCursor(cursor);
@@ -72,14 +84,14 @@ const Record = ({ gistID, files }) => {
 
   const onCursorChange = e => {
     let newCursor = { lineNumber: e.lineNumber, column: e.column };
-    if (isRecording) {
-      let event = {
-        time: Math.floor(performance.now() - recordingStartTime),
-        cursor: newCursor,
-        tab: activeTab
-      };
-      setEventLog(eventLog.concat(event));
-    }
+    // if (isRecording) {
+    //   let event = {
+    //     time: Math.floor(performance.now() - recordingStartTime),
+    //     cursor: newCursor,
+    //     tab: activeTab
+    //   };
+    //   setEventLog(eventLog.concat(event));
+    // }
     setTabAndCursor(activeTab, newCursor);
   };
 
@@ -88,14 +100,6 @@ const Record = ({ gistID, files }) => {
     let cursor = perTabCursor[newTabID]
       ? perTabCursor[newTabID]
       : defaultCursor;
-    if (isRecording) {
-      let event = {
-        time: Math.floor(performance.now() - recordingStartTime),
-        cursor,
-        tab: newTabID
-      };
-      setEventLog(eventLog.concat(event));
-    }
     setTabAndCursor(newTabID, cursor);
   };
 

@@ -55,7 +55,7 @@ const AudioPlayer = ({
     // Report back to our parent
     onTimeUpdate(audio.currentTime);
 
-    console.log("current time:" + audio.currentTime);
+    // console.log("current time:" + audio.currentTime);
 
     let time = `${decimalToTime(
       audio.currentTime,

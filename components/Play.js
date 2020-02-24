@@ -59,17 +59,12 @@ function calculateDelay(startTime, stamp) {
 }
 
 const Play = ({ gistID, files, eventLog, audio }) => {
-  // console.log("audioURL" + audio);
-
   // Meta playback state
-
-  // const [recordingStartTime, setRecordingStartTime] = useState(null);
   const [playbackStartTime, setPlaybackStartTime] = useState(null);
-  // const [recording, setRecording] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [following, setFollowing] = useState(true);
   const [interval, setNextInterval] = useState(0);
   const [isScrubbing, setIsScrubbing] = useState(false);
-  // const [playheadTime, setPlayheadTime] = useState(0);
 
   // Current playback state
   const [cursor, setCursor] = useState({ lineNumber: 1, column: 1 });
@@ -77,10 +72,8 @@ const Play = ({ gistID, files, eventLog, audio }) => {
   const [index, setIndex] = useState(0);
 
   const startPlaying = () => {
-    // console.log(eventLog);
     if (!playing) {
       setNextInterval(eventLog[1].time);
-      // setColor(eventLog[0].color);
       setIndex(0);
       setPlaybackStartTime(performance.now());
       setPlaying(true);
@@ -92,20 +85,22 @@ const Play = ({ gistID, files, eventLog, audio }) => {
 
   useInterval(
     () => {
-      // setPlayheadTime(performance.now() - playbackStartTime);
-      // console.log(eventLog[index]);
       if (index + 1 < eventLog.length) {
         let currentEvent = eventLog[index];
-        setCursor(currentEvent.cursor);
-        setActiveTab(currentEvent.tab);
+        if (following) {
+          setCursor(currentEvent.cursor);
+          setActiveTab(currentEvent.tab);
+        }
         setNextInterval(
           calculateDelay(playbackStartTime, eventLog[index + 1].time)
         );
         setIndex(index + 1);
       } else {
         let currentEvent = eventLog[index];
-        setCursor(currentEvent.cursor);
-        setActiveTab(currentEvent.tab);
+        if (following) {
+          setCursor(currentEvent.cursor);
+          setActiveTab(currentEvent.tab);
+        }
         setPlaying(false);
       }
     },
@@ -113,28 +108,13 @@ const Play = ({ gistID, files, eventLog, audio }) => {
   );
 
   const onTimeUpdate = t => {
-    // console.log(t);
-
     if (isScrubbing) {
       let ms = Math.round(t * 1000);
       let newIndex = findClosestEvent(ms, eventLog);
-      // console.log(newIndex);
       let event = eventLog[newIndex];
       setCursor(event.cursor);
       setActiveTab(event.tab);
-    } else {
-      // console.log("not scrubbing!");
     }
-
-    // let index = Math.round(t);
-    // if (index < eventLog.length) {
-    //   let event = eventLog[Math.round(t)];
-    //   setCursor({ lineNumber: Math.round(t), column: cursor.column });
-    //   setCursor(event.cursor);
-    //   setActiveTab(event.tab);
-    // } else {
-    //   console.log("we're out of events!");
-    // }
   };
 
   return (

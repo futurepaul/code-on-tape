@@ -118,7 +118,7 @@ class MonacoEditor extends React.Component {
     // });
 
     this._subscription = editor.onDidChangeCursorPosition(event => {
-      // console.info(`cursor position changed ${event.position}`);
+      console.info(`cursor position changed ${event.position}`);
       if (!this.__prevent_trigger_change_event && this.props.cursorChange) {
         this.__prevent_trigger_change_event = true;
         this.props.cursorChange(event.position);

@@ -1,10 +1,7 @@
-import { myFakeJson } from "../../fake_data";
 import fetch from "isomorphic-unfetch";
 import Play from "../../components/Play";
 
 const PlayUuid = ({ gistID, files, audioURL, events }) => {
-  console.log(events);
-
   if (!files || files.length == 0) {
     return <div>Not sure how you got here, but I hope everything's okay!</div>;
   } else {
@@ -26,7 +23,6 @@ PlayUuid.getInitialProps = async ctx => {
   try {
     let url = `https://code-on-tape.sfo2.digitaloceanspaces.com/${query}`;
 
-    // let files = myFakeJson;
     const filesResponse = await fetch(`${url}/gist.json`);
     let files = await filesResponse.json();
 
@@ -34,8 +30,6 @@ PlayUuid.getInitialProps = async ctx => {
     let events = await eventsResponse.json();
 
     let audioURL = `${url}/audio.ogg`;
-
-    // console.log(events);
 
     return {
       gistID: files.gistID,
