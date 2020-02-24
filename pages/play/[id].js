@@ -25,19 +25,21 @@ PlayUuid.getInitialProps = async ctx => {
   let query = ctx.query.id;
   try {
     let url = `https://code-on-tape.sfo2.digitaloceanspaces.com/${query}`;
-    // const audioResponse = await fetch(`${url}/audio.ogg`);
+
+    // let files = myFakeJson;
+    const filesResponse = await fetch(`${url}/gist.json`);
+    let files = await filesResponse.json();
+
     const eventsResponse = await fetch(`${url}/events.json`);
+    let events = await eventsResponse.json();
 
     let audioURL = `${url}/audio.ogg`;
-    let events = await eventsResponse.json();
 
     // console.log(events);
 
-    let files = myFakeJson;
-
     return {
-      gistID: query,
-      files: files,
+      gistID: files.gistID,
+      files: files.gists,
       events: events,
       audioURL: audioURL
     };
