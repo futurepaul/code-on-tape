@@ -22,27 +22,6 @@ export default (req, res) => {
   const fileName = req.body.fileName;
   const fileType = req.body.fileType;
 
-  // const params = {
-  //   Body: "The contents of the file",
-  //   Bucket: BUCKET,
-  //   Key: "file.ext"
-  // };
-
-  // space.putObject(params, function(err, data) {
-  //   if (err) {
-  //     // console.log(err, err.stack);
-  //     res
-  //       .status(400)
-  //       .json({ success: false, error: err, error_stack: err.stack });
-  //   } else {
-  //     console.log(data);
-  //     res.status(200).json({
-  //       success: true,
-  //       data: data
-  //     });
-  //   }
-  // });
-
   const params = {
     Bucket: BUCKET,
     Key: fileName,
@@ -55,6 +34,7 @@ export default (req, res) => {
     if (err) {
       console.log(err);
       res.status(400).json({ success: false, error: err });
+      return resolve();
     }
 
     const url = `https://${BUCKET}.${endpointUrl}/${fileName}`;
@@ -70,5 +50,6 @@ export default (req, res) => {
       success: true,
       data: { returnData }
     });
+    return resolve();
   });
 };
