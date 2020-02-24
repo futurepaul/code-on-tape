@@ -17,39 +17,40 @@ const config = {
 // aws.config.update();
 
 export default (req, res) => {
-  console.log(config);
-  const space = new aws.S3(config);
-  const fileName = req.body.fileName;
-  const fileType = req.body.fileType;
+  return new Promise(resolve => {
+    const space = new aws.S3(config);
+    const fileName = req.body.fileName;
+    const fileType = req.body.fileType;
 
-  const params = {
-    Bucket: BUCKET,
-    Key: fileName,
-    Expires: 500,
-    ContentType: fileType,
-    ACL: "public-read"
-  };
-
-  space.getSignedUrl("putObject", params, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.status(400).json({ success: false, error: err });
-      return resolve();
-    }
-
-    const url = `https://${BUCKET}.${endpointUrl}/${fileName}`;
-
-    console.log(url);
-
-    const returnData = {
-      signedRequest: data,
-      url
+    const params = {
+      Bucket: BUCKET,
+      Key: fileName,
+      Expires: 500,
+      ContentType: fileType,
+      ACL: "public-read"
     };
 
-    res.status(200).json({
-      success: true,
-      data: { returnData }
+    space.getSignedUrl("putObject", params, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.status(400).json({ success: false, error: err });
+        return resolve();
+      }
+
+      const url = `https://${BUCKET}.${endpointUrl}/${fileName}`;
+
+      console.log(url);
+
+      const returnData = {
+        signedRequest: data,
+        url
+      };
+
+      res.status(200).json({
+        success: true,
+        data: { returnData }
+      });
+      return resolve();
     });
-    return resolve();
   });
 };
