@@ -65,20 +65,33 @@ const Play = ({ gistID, files, eventLog, audio }) => {
   const [following, setFollowing] = useState(true);
   const [interval, setNextInterval] = useState(0);
   const [isScrubbing, setIsScrubbing] = useState(false);
+  const [postScrub, setPostScrub] = useState(false);
 
   // Current playback state
   const [cursor, setCursor] = useState({ lineNumber: 1, column: 1 });
   const [activeTab, setActiveTab] = useState(0);
   const [index, setIndex] = useState(0);
+  const [roughPlaybackTime, setRoughPlaybackTime] = useState(0);
+
+  const onPostScrub = () => {
+    let t = roughPlaybackTime;
+    let ms = Math.round(t * 1000);
+    console.log(ms);
+    let newIndex = findClosestEvent(ms, eventLog);
+    let event = eventLog[newIndex];
+    setPlaybackStartTime(performance.now() - event.time);
+    console.log(event);
+    setIndex(newIndex);
+    setCursor(event.cursor);
+    setActiveTab(event.tab);
+  };
 
   const startPlaying = () => {
-    if (!playing) {
-      setNextInterval(eventLog[1].time);
-      setIndex(0);
-      setPlaybackStartTime(performance.now());
+    if (!playing && index < eventLog.length - 1) {
+      setNextInterval(eventLog[index + 1].time);
+      setPlaybackStartTime(performance.now() - eventLog[index].time);
       setPlaying(true);
     } else {
-      setIndex(0);
       setPlaying(false);
     }
   };
@@ -111,24 +124,26 @@ const Play = ({ gistID, files, eventLog, audio }) => {
     setActiveTab(id);
   };
 
-  const onTimeUpdate = t => {
-    if (isScrubbing) {
-      let ms = Math.round(t * 1000);
-      let newIndex = findClosestEvent(ms, eventLog);
-      let event = eventLog[newIndex];
-      setCursor(event.cursor);
-      setActiveTab(event.tab);
-    }
-  };
+  // const onTimeUpdate = t => {
+
+  //   // if (isScrubbing) {
+  //   //   let ms = Math.round(t * 1000);
+  //   //   let newIndex = findClosestEvent(ms, eventLog);
+  //   //   let event = eventLog[newIndex];
+  //   //   setIndex(newIndex);
+  //   //   setCursor(event.cursor);
+  //   //   setActiveTab(event.tab);
+  //   // }
+  // };
 
   return (
     <div>
       <AudioPlayer
-        onTimeUpdate={onTimeUpdate}
+        onTimeUpdate={setRoughPlaybackTime}
         onClickPlay={startPlaying}
         audioSrcUrl={audio ? audio : "/coloradogirl.mp3"}
         onMouseDown={() => setIsScrubbing(true)}
-        onMouseUp={() => setIsScrubbing(false)}
+        onMouseUp={onPostScrub}
       />
       <Tabs
         activeTab={activeTab}
