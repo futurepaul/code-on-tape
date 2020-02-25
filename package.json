@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "audio-recorder-polyfill": "^0.2.0",
     "aws-sdk": "^2.600.0",
     "axios": "^0.19.1",
     "isomorphic-unfetch": "^3.0.0",

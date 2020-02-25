@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import MediaRecorder from "audio-recorder-polyfill";
+MediaRecorder.encoder = require("audio-recorder-polyfill/mpeg-encoder");
+MediaRecorder.prototype.mimeType = "audio/mpeg";
 
 // type Hook = () => [string, any, boolean, () => void, () => void];
 
@@ -53,7 +56,8 @@ const useRecorder = () => {
 
 async function requestRecorder() {
   let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  const mimeType = "audio/ogg";
+  // const mimeType = "audio/ogg";
+  const mimeType = "audio/mpeg";
   return new MediaRecorder(stream, { type: mimeType });
 }
 export default useRecorder;

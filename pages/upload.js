@@ -110,8 +110,10 @@ const Upload = () => {
     );
 
     //Upload the mp3
-    let audio_file_name = `${uuid}/audio.ogg`;
-    let audio_file_type = "audio/ogg";
+    // let audio_file_name = `${uuid}/audio.ogg`;
+    // let audio_file_type = "audio/ogg";
+    let audio_file_name = `${uuid}/audio.mp3`;
+    let audio_file_type = "audio/mpeg";
     let audio_url = fileUpload(
       audio_file_name,
       audio_file_type,

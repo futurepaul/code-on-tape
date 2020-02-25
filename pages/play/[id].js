@@ -29,7 +29,8 @@ PlayUuid.getInitialProps = async ctx => {
     const eventsResponse = await fetch(`${url}/events.json`);
     let events = await eventsResponse.json();
 
-    let audioURL = `${url}/audio.ogg`;
+    // let audioURL = `${url}/audio.ogg`;
+    let audioURL = `${url}/audio.mp3`;
 
     return {
       gistID: files.gistID,
