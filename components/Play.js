@@ -10,7 +10,7 @@ function findClosestEvent(scrubTime, events) {
 
   // console.log(`length: ${length}, totalTime: ${totalTime}, guess: ${guess}`);
 
-  while (guess > 0 && guess < length - 1) {
+  while (guess > 1 && guess < length - 1) {
     if (
       scrubTime <= events[guess + 1].time &&
       scrubTime >= events[guess].time
@@ -54,7 +54,7 @@ function calculateDelay(startTime, stamp) {
   if (delay < 1) {
     delay = 1;
   }
-  // console.log(`delay: ${delay}, ct: ${currentTime}, st: ${startTime}`);
+  console.log(`delay: ${delay}, ct: ${currentTime}, st: ${startTime}`);
   return delay;
 }
 
@@ -65,34 +65,61 @@ const Play = ({ gistID, files, eventLog, audio }) => {
   const [following, setFollowing] = useState(true);
   const [interval, setNextInterval] = useState(0);
   const [isScrubbing, setIsScrubbing] = useState(false);
-  const [postScrub, setPostScrub] = useState(false);
+  const audioRef = useRef(null);
 
   // Current playback state
   const [cursor, setCursor] = useState({ lineNumber: 1, column: 1 });
   const [activeTab, setActiveTab] = useState(0);
   const [index, setIndex] = useState(0);
-  const [roughPlaybackTime, setRoughPlaybackTime] = useState(0);
 
+  // This is called after we release the slider of the aduio player.
   const onPostScrub = () => {
-    let t = roughPlaybackTime;
+    audioRef.current.pause();
+    setNextInterval(null);
+    setPlaying(false);
+
+    let t = audioRef.current.currentTime;
     let ms = Math.round(t * 1000);
-    console.log(ms);
     let newIndex = findClosestEvent(ms, eventLog);
+
     let event = eventLog[newIndex];
-    setPlaybackStartTime(performance.now() - event.time);
-    console.log(event);
+
     setIndex(newIndex);
-    setCursor(event.cursor);
     setActiveTab(event.tab);
+    setCursor(event.cursor);
+  };
+
+  const continuePlayback = () => {
+    // let t = audioRef.current.currentTime;
+    // let ms = Math.round(t * 1000);
+    // let newIndex = findClosestEvent(ms, eventLog);
+
+    if (index < eventLog.length - 1) {
+      let newPlaybackStartTime = performance.now() - eventLog[index].time;
+      let delay = calculateDelay(newPlaybackStartTime, eventLog[index].time);
+      setPlaybackStartTime(newPlaybackStartTime);
+      setNextInterval(delay);
+    } else {
+      setNextInterval(null);
+      setPlaying(false);
+    }
   };
 
   const startPlaying = () => {
-    if (!playing && index < eventLog.length - 1) {
-      setNextInterval(eventLog[index + 1].time);
-      setPlaybackStartTime(performance.now() - eventLog[index].time);
+    if (!playing) {
       setPlaying(true);
+      audioRef.current.play();
+      continuePlayback();
     } else {
+      setNextInterval(null);
+      audioRef.current.pause();
       setPlaying(false);
+    }
+  };
+
+  const onKeyPress = e => {
+    if (e.charCode === 32) {
+      startPlaying();
     }
   };
 
@@ -104,9 +131,11 @@ const Play = ({ gistID, files, eventLog, audio }) => {
           setActiveTab(currentEvent.tab);
           setCursor(currentEvent.cursor);
         }
-        setNextInterval(
-          calculateDelay(playbackStartTime, eventLog[index + 1].time)
-        );
+        let delay = calculateDelay(playbackStartTime, eventLog[index + 1].time);
+        // let errorCalc =
+        //   playbackStartTime + eventLog[index].time - performance.now();
+        // console.log(`error amount: ${errorCalc}`);
+        setNextInterval(delay);
         setIndex(index + 1);
       } else {
         let currentEvent = eventLog[index];
@@ -124,26 +153,16 @@ const Play = ({ gistID, files, eventLog, audio }) => {
     setActiveTab(id);
   };
 
-  // const onTimeUpdate = t => {
-
-  //   // if (isScrubbing) {
-  //   //   let ms = Math.round(t * 1000);
-  //   //   let newIndex = findClosestEvent(ms, eventLog);
-  //   //   let event = eventLog[newIndex];
-  //   //   setIndex(newIndex);
-  //   //   setCursor(event.cursor);
-  //   //   setActiveTab(event.tab);
-  //   // }
-  // };
-
   return (
-    <div>
+    <div onKeyPress={onKeyPress}>
       <AudioPlayer
-        onTimeUpdate={setRoughPlaybackTime}
         onClickPlay={startPlaying}
         audioSrcUrl={audio ? audio : "/coloradogirl.mp3"}
         onMouseDown={() => setIsScrubbing(true)}
         onMouseUp={onPostScrub}
+        ref={audioRef}
+        playing={playing}
+        setPlaying={setPlaying}
       />
       <Tabs
         activeTab={activeTab}
