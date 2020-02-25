@@ -8,7 +8,7 @@ if (process.browser && !MonacoEditor) {
   });
 }
 
-const RecordEditor = ({ gist, tabID, cursor, onCursorChange }) => {
+const Editor = ({ gist, tabID, cursor, onCursorChange }) => {
   // console.log(`RecordEditor active tab: ${tabID}`);
   if (!MonacoEditor) {
     return <div></div>;
@@ -33,4 +33,4 @@ const RecordEditor = ({ gist, tabID, cursor, onCursorChange }) => {
   );
 };
 
-export default RecordEditor;
+export default Editor;

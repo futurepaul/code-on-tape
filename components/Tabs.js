@@ -27,7 +27,7 @@ const Tab = ({ onClick, active, children }) => {
   );
 };
 
-const Tabs = ({ files, activeTab, setActiveTab }) => {
+const Tabs = ({ files, activeTab, requestActiveTab }) => {
   // console.log(`activeTab: ${activeTab}`);
   return (
     <>
@@ -35,7 +35,7 @@ const Tabs = ({ files, activeTab, setActiveTab }) => {
         {files.map((file, index) => (
           <Tab
             active={index === activeTab}
-            onClick={() => setActiveTab(index)}
+            onClick={() => requestActiveTab(index)}
             key={index}
           >
             {files[index].filename}

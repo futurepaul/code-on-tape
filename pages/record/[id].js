@@ -1,10 +1,9 @@
 import { useState, useContext } from "react";
-import RecordEditor from "../../components/Editor/RecordEditor";
+import Editor from "../../components/Editor/Editor";
 import RecordControls from "../../components/RecordControls";
 import Tabs from "../../components/Tabs";
 import WarningBanner from "../../components/WarningBanner";
 import { useRouter } from "next/router";
-import { myFakeJson } from "../../fake_data";
 import EditorContext from "../../context/editor/editorContext";
 import Router from "next/router";
 import fetch from "isomorphic-unfetch";
@@ -23,7 +22,6 @@ const Record = ({ gistID, files }) => {
   const [eventLog, setEventLog] = useState(null);
   const [recordingStartTime, setRecordingStartTime] = useState(null);
   const [isRecording, setIsRecording] = useState(null);
-  // const [time, setTime] = useState(0);
 
   // Audio recording
   let [
@@ -95,11 +93,11 @@ const Record = ({ gistID, files }) => {
     setTabAndCursor(activeTab, newCursor);
   };
 
-  const onTabChange = newTabID => {
-    console.log(perTabCursor[newTabID]);
+  const requestActiveTab = newTabID => {
     let cursor = perTabCursor[newTabID]
       ? perTabCursor[newTabID]
       : defaultCursor;
+    console.log(perTabCursor);
     setTabAndCursor(newTabID, cursor);
   };
 
@@ -143,8 +141,12 @@ const Record = ({ gistID, files }) => {
           cursor={cursor}
         />
       )}
-      <Tabs activeTab={activeTab} setActiveTab={onTabChange} files={files} />
-      <RecordEditor
+      <Tabs
+        activeTab={activeTab}
+        requestActiveTab={requestActiveTab}
+        files={files}
+      />
+      <Editor
         gist={files}
         tabID={activeTab}
         cursor={cursor}
@@ -167,7 +169,7 @@ Record.getInitialProps = async ctx => {
     let gistFiles = json.files;
 
     let files = Object.keys(gistFiles).map(key => gistFiles[key]);
-    // let files = myFakeJson;
+
     return { gistID: query, files: files };
   } catch (error) {
     console.error(error);

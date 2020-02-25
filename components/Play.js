@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import PlaybackEditor from "../components/Editor/PlaybackEditor";
+import Editor from "../components/Editor/Editor";
 import AudioPlayer from "../components/AudioPlayer";
 import Tabs from "../components/Tabs";
 
@@ -88,8 +88,8 @@ const Play = ({ gistID, files, eventLog, audio }) => {
       if (index + 1 < eventLog.length) {
         let currentEvent = eventLog[index];
         if (following) {
-          setCursor(currentEvent.cursor);
           setActiveTab(currentEvent.tab);
+          setCursor(currentEvent.cursor);
         }
         setNextInterval(
           calculateDelay(playbackStartTime, eventLog[index + 1].time)
@@ -98,14 +98,18 @@ const Play = ({ gistID, files, eventLog, audio }) => {
       } else {
         let currentEvent = eventLog[index];
         if (following) {
-          setCursor(currentEvent.cursor);
           setActiveTab(currentEvent.tab);
+          setCursor(currentEvent.cursor);
         }
         setPlaying(false);
       }
     },
     playing ? interval : null
   );
+
+  const requestActiveTab = id => {
+    setActiveTab(id);
+  };
 
   const onTimeUpdate = t => {
     if (isScrubbing) {
@@ -126,8 +130,17 @@ const Play = ({ gistID, files, eventLog, audio }) => {
         onMouseDown={() => setIsScrubbing(true)}
         onMouseUp={() => setIsScrubbing(false)}
       />
-      <Tabs activeTab={activeTab} setActiveTab={setActiveTab} files={files} />
-      <PlaybackEditor gist={files} tabID={activeTab} cursor={cursor} />
+      <Tabs
+        activeTab={activeTab}
+        requestActiveTab={requestActiveTab}
+        files={files}
+      />
+      <Editor
+        gist={files}
+        tabID={activeTab}
+        cursor={cursor}
+        onCursorChange={e => console.log("on cursor change:" + e)}
+      />
       <style jsx>{`
         .nav {
           display: flex;
