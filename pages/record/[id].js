@@ -3,7 +3,6 @@ import Editor from "../../components/Editor/Editor";
 import RecordControls from "../../components/RecordControls";
 import Tabs from "../../components/Tabs";
 import WarningBanner from "../../components/WarningBanner";
-import { useRouter } from "next/router";
 import EditorContext from "../../context/editor/editorContext";
 import Router from "next/router";
 import fetch from "isomorphic-unfetch";
