@@ -1,26 +1,32 @@
 import { useEffect, useState } from "react";
 
 const useRecorder = () => {
+  // Internal state
+  const [shouldStartRecording, setShouldStartRecording] = useState(false);
+
+  // Exported state
   const [audioURL, setAudioURL] = useState("");
   const [audioBlob, setAudioBlob] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
   const [recorder, setRecorder] = useState(null);
+  const [isRecordingAudio, setIsRecordingAudio] = useState(false);
 
   useEffect(() => {
     // Lazily obtain recorder first time we're recording.
     if (recorder === null) {
-      if (isRecording) {
+      if (shouldStartRecording) {
         requestRecorder().then(setRecorder, e => {
           console.error(e);
-          setIsRecording(false);
+
+          setShouldStartRecording(false);
         });
       }
       return;
     }
 
     // Manage recorder state.
-    if (isRecording) {
+    if (shouldStartRecording) {
       recorder.start();
+      setIsRecordingAudio(true);
     } else {
       recorder.stop();
     }
@@ -29,24 +35,26 @@ const useRecorder = () => {
     const handleData = e => {
       setAudioURL(URL.createObjectURL(e.data));
       setAudioBlob(e.data);
+      setIsRecordingAudio(false);
     };
 
     recorder.addEventListener("dataavailable", handleData);
+
     return () => {
       recorder.stream.getTracks().forEach(i => i.stop());
       recorder.removeEventListener("dataavailable", handleData);
     };
-  }, [recorder, isRecording]);
+  }, [recorder, shouldStartRecording]);
 
   const startRecording = () => {
-    setIsRecording(true);
+    setShouldStartRecording(true);
   };
 
   const stopRecording = () => {
-    setIsRecording(false);
+    setShouldStartRecording(false);
   };
 
-  return [audioURL, audioBlob, isRecording, startRecording, stopRecording];
+  return [audioURL, audioBlob, isRecordingAudio, startRecording, stopRecording];
 };
 
 async function requestRecorder() {

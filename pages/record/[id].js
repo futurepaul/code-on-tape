@@ -7,6 +7,7 @@ import EditorContext from "../../context/editor/editorContext";
 import Router from "next/router";
 import fetch from "isomorphic-unfetch";
 import useRecorder from "../../hooks/useRecorder";
+import useInterval from "../../hooks/useInterval";
 
 const defaultCursor = { lineNumber: 1, column: 1 };
 
@@ -14,7 +15,6 @@ const Record = ({ gistID, files }) => {
   // App state
   const [cursor, setCursor] = useState(defaultCursor);
   const [activeTab, setActiveTab] = useState(0);
-
   const [perTabCursor, setPerTabCursor] = useState([]);
 
   // Event recording logic
@@ -51,13 +51,13 @@ const Record = ({ gistID, files }) => {
       setEventLog(eventLog.concat(event));
     }
 
-    console.log(
-      `tab: ${tab}, cursor: { line: ${cursor.lineNumber}, column: ${cursor.column}}`
-    );
+    // console.log(
+    //   `tab: ${tab}, cursor: { line: ${cursor.lineNumber}, column: ${cursor.column}}`
+    // );
     let tempPerTabCursor = perTabCursor;
     tempPerTabCursor[tab] = cursor;
 
-    console.log(tempPerTabCursor);
+    // console.log(tempPerTabCursor);
 
     setPerTabCursor(tempPerTabCursor);
     setActiveTab(tab);
@@ -81,14 +81,6 @@ const Record = ({ gistID, files }) => {
 
   const onCursorChange = e => {
     let newCursor = { lineNumber: e.lineNumber, column: e.column };
-    // if (isRecording) {
-    //   let event = {
-    //     time: Math.floor(performance.now() - recordingStartTime),
-    //     cursor: newCursor,
-    //     tab: activeTab
-    //   };
-    //   setEventLog(eventLog.concat(event));
-    // }
     setTabAndCursor(activeTab, newCursor);
   };
 
@@ -108,6 +100,16 @@ const Record = ({ gistID, files }) => {
     setAudioBlob(audioBlob);
     Router.push("/play");
   };
+
+  useInterval(
+    () => {
+      setTabAndCursor(activeTab, cursor);
+      console.log(
+        `Set tab: ${activeTab} and cursor: l: ${cursor.lineNumber}, c: ${cursor.column} using interval`
+      );
+    },
+    isRecording ? 1000 : null
+  );
 
   return (
     <div>

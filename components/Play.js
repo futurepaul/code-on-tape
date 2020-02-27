@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Editor from "../components/Editor/Editor";
 import AudioPlayer from "../components/AudioPlayer";
 import Tabs from "../components/Tabs";
+import useInterval from "../hooks/useInterval";
 
 function findClosestEvent(scrubTime, events) {
   const length = events.length;
@@ -26,25 +27,6 @@ function findClosestEvent(scrubTime, events) {
   }
 
   return Math.min(guess, length - 1);
-}
-
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
-
-  useEffect(() => {
-    savedCallback.current = callback;
-  });
-
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
 }
 
 function calculateDelay(startTime, stamp) {
@@ -107,9 +89,15 @@ const Play = ({ gistID, files, eventLog, audio }) => {
 
   const startPlaying = () => {
     if (!playing) {
-      setPlaying(true);
-      audioRef.current.play();
-      continuePlayback();
+      audioRef.current
+        .play()
+        .then(() => {
+          setPlaying(true);
+          continuePlayback();
+        })
+        .catch(e => {
+          console.error(e);
+        });
     } else {
       setNextInterval(null);
       audioRef.current.pause();
