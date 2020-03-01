@@ -10,13 +10,18 @@ const PlayUuid = ({ gistID, files, audioURL, events }) => {
         </WarningBanner>
       </div>
     );
+  } else {
+    return (
+      <div>
+        <Play
+          gistID={gistID}
+          files={files}
+          eventLog={events}
+          audio={audioURL}
+        />
+      </div>
+    );
   }
-
-  return (
-    <div>
-      <Play gistID={gistID} files={files} eventLog={events} audio={audioURL} />
-    </div>
-  );
 };
 
 PlayUuid.getInitialProps = async ctx => {
