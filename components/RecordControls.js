@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useEffect } from "react";
 import Help from "./Help";
+import AudioRecorder from "./AudioRecorder";
 
 const Meter = ({ level }) => {
   let ref = useRef();
@@ -35,14 +36,23 @@ const ProgressBar = ({ progress }) => (
   </div>
 );
 
-const RecordControls = ({ onClickRecord, isRecording, cursor }) => {
+const RecordControls = ({
+  onClickRecord,
+  onHasMediaUrl,
+  isRecording,
+  cursor
+}) => {
   return (
     <>
       <div className="controls">
         <div className="actual-controls">
-          <button className={isRecording && "active"} onClick={onClickRecord}>
+          {/* <button className={isRecording && "active"} onClick={onClickRecord}>
             {isRecording ? "Stop Recording" : "Record"}
-          </button>
+          </button> */}
+          <AudioRecorder
+            onClickRecord={onClickRecord}
+            onHasMediaUrl={onHasMediaUrl}
+          />
           <div className="time">0:00</div>
           <ProgressBar progress={90} className="progress" />
           <div>{`line: ${cursor.lineNumber} column: ${cursor.column}`}</div>

@@ -3,11 +3,9 @@ import Editor from "../../components/Editor/Editor";
 import RecordControls from "../../components/RecordControls";
 import Tabs from "../../components/Tabs";
 import WarningBanner from "../../components/WarningBanner";
-import AudioRecorder from "../../components/AudioRecorder";
 import EditorContext from "../../context/editor/editorContext";
 import Router from "next/router";
 import fetch from "isomorphic-unfetch";
-import useRecorder from "../../hooks/useRecorder";
 import useInterval from "../../hooks/useInterval";
 
 const defaultCursor = { lineNumber: 1, column: 1 };
@@ -23,16 +21,6 @@ const Record = ({ gistID, files }) => {
   const [recordingStartTime, setRecordingStartTime] = useState(null);
   const [isRecording, setIsRecording] = useState(null);
   const [recordingError, setRecordingError] = useState(null);
-
-  // Audio recording
-  let [
-    audioURL,
-    audioBlob,
-    isRecordingAudio,
-    startRecordingAudio,
-    stopRecordingAudio,
-    recorder
-  ] = useRecorder();
 
   // Editor context for forwarding state to the playback preview
   const editorContext = useContext(EditorContext);
@@ -60,40 +48,28 @@ const Record = ({ gistID, files }) => {
     let tempPerTabCursor = perTabCursor;
     tempPerTabCursor[tab] = cursor;
 
-    // console.log(tempPerTabCursor);
-
     setPerTabCursor(tempPerTabCursor);
     setActiveTab(tab);
     setCursor(cursor);
   };
 
-  const onClickRecord = () => {
-    console.log("clicked record");
-    if (!recorder) {
-      // requestMicrophone();
-      return;
-    }
-
-    // if (recorder && !recorder.stream) {
-    //   setRecordingError("Didn't do a good job accepting I bet.");
-    //   // setRecorder(null);
-    //   return;
-    // }
-
-    if (!isRecording) {
+  const onClickRecord = (shouldStart, startTime) => {
+    console.log(shouldStart, startTime);
+    if (shouldStart && startTime) {
       setIsRecording(true);
-      startRecordingAudio();
       setEventLog([{ time: 0, cursor: cursor, tab: activeTab }]);
       console.log("Starting recording");
-      setRecordingStartTime(performance.now());
-    }
-
-    if (isRecording && recorder && recorder.stream) {
+      setRecordingStartTime(startTime);
+    } else {
       setIsRecording(false);
-      stopRecordingAudio();
       console.log("Stopping recording");
       console.log(eventLog);
     }
+  };
+
+  const onHasMediaUrl = (url, blob) => {
+    setAudioURL(url);
+    setAudioBlob(blob);
   };
 
   const onCursorChange = e => {
@@ -113,8 +89,6 @@ const Record = ({ gistID, files }) => {
     setGists(files);
     setGistID(gistID);
     saveEventLog(eventLog);
-    setAudioURL(audioURL);
-    setAudioBlob(audioBlob);
     Router.push("/play");
   };
 
@@ -162,6 +136,7 @@ const Record = ({ gistID, files }) => {
           onClickRecord={onClickRecord}
           isRecording={isRecording}
           cursor={cursor}
+          onHasMediaUrl={onHasMediaUrl}
         />
       )}
       <Tabs

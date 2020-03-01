@@ -34,6 +34,8 @@ export default function AudioRecorder({ onHasMediaUrl, onClickRecord }) {
   }, [getMediaStream]);
 
   const startRecording = async () => {
+    setStatus("recording");
+
     if (!mediaStream.current) {
       await getMediaStream();
     }
@@ -73,16 +75,15 @@ export default function AudioRecorder({ onHasMediaUrl, onClickRecord }) {
   const onRecordingStop = () => {
     const blob = new Blob(mediaChunks.current, { type: "audio/mpeg" });
     const url = URL.createObjectURL(blob);
-    onHasMediaUrl(url, startTime);
+    onHasMediaUrl(url, blob);
   };
 
   const onClick = () => {
     if (status === "") {
-      onClickRecord(true);
-      setStartTime(performance.now());
+      onClickRecord(true, performance.now());
       startRecording();
     } else if (status === "recording") {
-      onClickRecord(false);
+      onClickRecord(false, null);
       stopRecording();
     } else {
       throw new Error("I don't know what to do!");
