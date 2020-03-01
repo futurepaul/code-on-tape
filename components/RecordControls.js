@@ -3,58 +3,31 @@ import { useEffect } from "react";
 import Help from "./Help";
 import AudioRecorder from "./AudioRecorder";
 
-const Meter = ({ level }) => {
-  let ref = useRef();
+function decimalToTime(ms) {
+  let fmtTime = new Date(ms).toISOString().substr(11, 8);
 
-  useEffect(() => {
-    let canvas = ref.current;
-    let context = canvas.getContext("2d");
-    context.beginPath();
-    context.arc(50, 50, 50, 0, 2 * Math.PI);
-    context.fill();
-  });
+  if (ms >= 3600000) {
+    return fmtTime;
+  } else {
+    //remove the hours
+    fmtTime = fmtTime.substring(3);
 
-  return <canvas ref={ref} style={{ width: "100px", height: "30px" }} />;
-};
+    if (ms >= 600000) {
+      return fmtTime;
+    } else {
+      //remove the tens minute
+      return fmtTime.substring(1);
+    }
+  }
+}
 
-const ProgressBar = ({ progress }) => (
-  <div>
-    <style jsx>{`
-      .background {
-        background-color: pink;
-        width: 100px;
-        margin-right: 1rem;
-      }
-      .foreground {
-        background-color: red;
-        width: ${progress}%;
-      }
-    `}</style>
-    <div className="background">
-      <div className="foreground">hey</div>
-    </div>
-  </div>
-);
-
-const RecordControls = ({
-  onClickRecord,
-  onHasMediaUrl,
-  isRecording,
-  cursor
-}) => {
+const RecordControls = ({ onClickRecord, cursor, timeSoFar }) => {
   return (
     <>
       <div className="controls">
         <div className="actual-controls">
-          {/* <button className={isRecording && "active"} onClick={onClickRecord}>
-            {isRecording ? "Stop Recording" : "Record"}
-          </button> */}
-          <AudioRecorder
-            onClickRecord={onClickRecord}
-            onHasMediaUrl={onHasMediaUrl}
-          />
-          <div className="time">0:00</div>
-          <ProgressBar progress={90} className="progress" />
+          <AudioRecorder onClickRecord={onClickRecord} />
+          <div className="time">{decimalToTime(timeSoFar)}</div>
           <div>{`line: ${cursor.lineNumber} column: ${cursor.column}`}</div>
         </div>
 
@@ -68,6 +41,10 @@ const RecordControls = ({
           <p>
             Once you're done recording, click <em>Stop Recording</em> and you'll
             get a chance to preview your recording before uploading.
+          </p>
+          <p>
+            <strong>Warning:</strong> I haven't tested recording anything longer
+            than a few minutes, so don't record an audiobook probably!
           </p>
         </Help>
       </div>
@@ -89,10 +66,6 @@ const RecordControls = ({
         }
         .time {
           margin-right: 1rem;
-        }
-
-        .progress {
-          margin: 1rem;
         }
 
         button {

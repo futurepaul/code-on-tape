@@ -1,5 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import EditorContext from "../context/editor/editorContext";
+import WarningBanner from "../components/WarningBanner";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
@@ -9,7 +10,8 @@ function fileUpload(
   file,
   onUploadPercent,
   onSuccess,
-  setUrl
+  setUrl,
+  setUploadError
 ) {
   axios
     .post("./api/upload", {
@@ -38,10 +40,12 @@ function fileUpload(
         })
         .catch(error => {
           console.error(error);
+          setUploadError("nested");
         });
     })
     .catch(error => {
       console.error(error);
+      setUploadError("broad");
     });
 }
 
@@ -49,11 +53,16 @@ const ProgressBar = ({ progress }) => (
   <div>
     <style jsx>{`
       .background {
-        background-color: pink;
+        background-color: white;
+        border: 1px solid black;
+        width: 10em;
+        margin-top: 1em;
       }
+
       .foreground {
-        background-color: red;
+        background-color: black;
         width: ${progress}%;
+        margin: 1px;
       }
     `}</style>
     <div className="background">
@@ -69,14 +78,23 @@ const Upload = () => {
 
   // Upload state
   const [success, setSuccess] = useState(false);
-  // const [uploadInput, setUploadInput] = useState({});
-  const [hover, setHovering] = useState(false);
   const [uploadPercent, setUploadPercent] = useState(0.0);
-  const [urls, setUrls] = useState({ events: null, audio: null });
   const [eventsUrl, setEventsUrl] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const [gistsUrl, setGistsUrl] = useState(null);
   const [playbackUrl, setPlaybackUrl] = useState(null);
+  const [uploadError, setUploadError] = useState(null);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", e => {
+      if (!success) {
+        e.preventDefault();
+        var confirmationMessage =
+          "If you leave this page without uploading your recording will be lost!";
+        return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+      }
+    });
+  });
 
   // Generate Uuid
   const uuid = uuidv4();
@@ -92,7 +110,8 @@ const Upload = () => {
       events_json,
       setUploadPercent,
       setSuccess,
-      setEventsUrl
+      setEventsUrl,
+      setUploadError
     );
 
     //Upload the gists json
@@ -106,7 +125,8 @@ const Upload = () => {
       gists_json,
       setUploadPercent,
       setSuccess,
-      setGistsUrl
+      setGistsUrl,
+      setUploadError
     );
 
     //Upload the mp3
@@ -120,39 +140,96 @@ const Upload = () => {
       audioBlob,
       setUploadPercent,
       setSuccess,
-      setAudioUrl
+      setAudioUrl,
+      setUploadError
     );
 
     setPlaybackUrl(`/play/${uuid}`);
   };
 
-  if (!gists || gists.length == 0) {
-    console.log(gists);
-    return <div>Not sure how you got here, but I hope everything's okay!</div>;
-  } else {
-    return (
-      <div>
-        <button onClick={handleUpload}>Upload!</button>
-        <ProgressBar progress={uploadPercent} />
-        <div>
-          <p>{eventsUrl && <a href={eventsUrl}>events</a>}</p>
-          <p>{audioUrl && <a href={audioUrl}>audio</a>}</p>
-          <p>{gistsUrl && <a href={gistsUrl}>gist</a>}</p>
-          <p>{playbackUrl && <a href={playbackUrl}>actual playback url</a>}</p>
-        </div>
-        <ul>
-          {events.map((e, i) => {
-            let cursor = e.cursor;
-            return (
-              <li
-                key={i}
-              >{`line: ${cursor.lineNumber}, column: ${cursor.column}, tab: ${e.tab} time: ${e.time}`}</li>
-            );
-          })}
-        </ul>
-      </div>
+  const copyUrl = text => {
+    navigator.clipboard.writeText(text).then(
+      function() {
+        console.log("Async: Copying to clipboard was successful!");
+      },
+      function(err) {
+        console.error("Async: Could not copy text: ", err);
+      }
     );
+  };
+
+  const uploadFailMessage = (
+    <div>
+      <WarningBanner>
+        Upload error. Sorry! Please{" "}
+        <a href="https://github.com/futurepaul/code-on-tape/issues">
+          open an issue
+        </a>{" "}
+        or <a href="https://twitter.com/futurepaul/">hit me up on Twitter</a>
+      </WarningBanner>
+    </div>
+  );
+
+  if (!gists || gists.length == 0) {
+    return uploadFailMessage;
   }
+
+  return (
+    <>
+      <div className="center-wrap">
+        {uploadError ? (
+          uploadFailMessage
+        ) : (
+          <div>
+            {(!eventsUrl || !audioUrl || !gistsUrl || !playbackUrl) && (
+              <div className="upload">
+                <button onClick={handleUpload}>Upload!</button>
+                <ProgressBar progress={uploadPercent} />
+              </div>
+            )}
+
+            {eventsUrl && audioUrl && gistsUrl && playbackUrl && (
+              <div className="upload">
+                <p>
+                  <a href={playbackUrl}>{playbackUrl}</a>{" "}
+                  <button onClick={() => copyUrl(playbackUrl)}>Copy</button>
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+      <style jsx>{`
+        h2 {
+          text-shadow: 2px 2px #00ffff;
+        }
+
+        button {
+          padding: 10px 10px;
+          border-radius: 0;
+          border: solid 1px black;
+          background-color: #00ffff;
+        }
+
+        .upload {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          background-color: white;
+          width: 20em;
+          height: 20em;
+        }
+
+        .center-wrap {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+      `}</style>
+    </>
+  );
 };
 
 export default Upload;

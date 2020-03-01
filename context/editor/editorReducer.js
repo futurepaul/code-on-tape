@@ -1,28 +1,14 @@
 import {
-  IMPORT_GIST,
-  SET_ACTIVE_TAB,
-  SET_CURRENT_LINE,
-  ADD_EVENT,
   SET_GIST_ID,
   SET_GISTS,
   SET_EVENTS,
   SET_AUDIO_URL,
-  SET_AUDIO_BLOB
+  SET_AUDIO_BLOB,
+  SET_RECORDING_ERROR
 } from "../types";
 
 export default (state, action) => {
   switch (action.type) {
-    case IMPORT_GIST:
-      return {
-        ...state,
-        gists: action.payload,
-        value: action.payload[0].content
-      };
-    case SET_CURRENT_LINE:
-      return {
-        ...state,
-        currentLine: action.payload
-      };
     case SET_GIST_ID:
       return {
         ...state,
@@ -48,6 +34,11 @@ export default (state, action) => {
       return {
         ...state,
         audioBlob: action.payload
+      };
+    case SET_RECORDING_ERROR:
+      return {
+        ...state,
+        recordingError: action.payload
       };
     default:
       return state;

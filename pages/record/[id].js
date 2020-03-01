@@ -20,17 +20,11 @@ const Record = ({ gistID, files }) => {
   const [eventLog, setEventLog] = useState(null);
   const [recordingStartTime, setRecordingStartTime] = useState(null);
   const [isRecording, setIsRecording] = useState(null);
-  const [recordingError, setRecordingError] = useState(null);
+  const [timeSoFar, setTimeSoFar] = useState(null);
 
   // Editor context for forwarding state to the playback preview
   const editorContext = useContext(EditorContext);
-  const {
-    setGists,
-    setGistID,
-    saveEventLog,
-    setAudioURL,
-    setAudioBlob
-  } = editorContext;
+  const { setGists, setGistID, saveEventLog, recordingError } = editorContext;
 
   const setTabAndCursor = (tab, cursor) => {
     if (isRecording) {
@@ -54,7 +48,6 @@ const Record = ({ gistID, files }) => {
   };
 
   const onClickRecord = (shouldStart, startTime) => {
-    console.log(shouldStart, startTime);
     if (shouldStart && startTime) {
       setIsRecording(true);
       setEventLog([{ time: 0, cursor: cursor, tab: activeTab }]);
@@ -65,11 +58,6 @@ const Record = ({ gistID, files }) => {
       console.log("Stopping recording");
       console.log(eventLog);
     }
-  };
-
-  const onHasMediaUrl = (url, blob) => {
-    setAudioURL(url);
-    setAudioBlob(blob);
   };
 
   const onCursorChange = e => {
@@ -95,6 +83,7 @@ const Record = ({ gistID, files }) => {
   useInterval(
     () => {
       setTabAndCursor(activeTab, cursor);
+      setTimeSoFar(Math.floor(performance.now() - recordingStartTime));
       console.log(
         `Set tab: ${activeTab} and cursor: l: ${cursor.lineNumber}, c: ${cursor.column} using interval`
       );
@@ -102,43 +91,48 @@ const Record = ({ gistID, files }) => {
     isRecording ? 1000 : null
   );
 
+  const success = (
+    <WarningBanner>
+      Recorded!
+      <button className="continue" onClick={gotoPlaybackPreview}>
+        Go to playback preview
+      </button>
+      <button className="danger" onClick={() => location.reload()}>
+        Clear recording and start over
+      </button>
+    </WarningBanner>
+  );
+
+  const microphone_fail = (
+    <WarningBanner>
+      <strong>Error:</strong> Something went wrong. Did you say yes to the
+      microphone? <button onClick={() => location.reload()}>Start over</button>
+    </WarningBanner>
+  );
+
+  const browser_fail = (
+    <WarningBanner>
+      <strong>Error:</strong> Sorry, your browser isn't supported!
+    </WarningBanner>
+  );
+
   return (
     <div>
-      {recordingError && (
-        <>
-          <WarningBanner>{recordingError}</WarningBanner>
-        </>
-      )}
-      {!isRecording && eventLog && eventLog.length > 1 ? (
-        <>
-          <WarningBanner>
-            Recorded!
-            <button className="continue" onClick={gotoPlaybackPreview}>
-              Go to playback preview
-            </button>
-            <button className="danger">Clear recording and start over</button>
-          </WarningBanner>
-          <style jsx>{`
-            button {
-              border: solid 1px black;
-              background: white;
-              margin-left: 1em;
-            }
+      {recordingError === "microphone" && microphone_fail}
+      {recordingError === "browser" && browser_fail}
+      {!isRecording &&
+      eventLog &&
+      eventLog.length > 1 &&
+      recordingError === null
+        ? success
+        : recordingError === null && (
+            <RecordControls
+              onClickRecord={onClickRecord}
+              cursor={cursor}
+              timeSoFar={timeSoFar}
+            />
+          )}
 
-            .danger {
-              background: none;
-              color: white;
-            }
-          `}</style>
-        </>
-      ) : (
-        <RecordControls
-          onClickRecord={onClickRecord}
-          isRecording={isRecording}
-          cursor={cursor}
-          onHasMediaUrl={onHasMediaUrl}
-        />
-      )}
       <Tabs
         activeTab={activeTab}
         requestActiveTab={requestActiveTab}
@@ -156,7 +150,6 @@ const Record = ({ gistID, files }) => {
 
 const client_id = process.env.GITHUB_CLIENT_ID;
 const client_secret = process.env.GITHUB_CLIENT_SECRET;
-// const query = "7c09ce3491dcfb9ca103bc46127435d4";
 
 Record.getInitialProps = async ctx => {
   let query = ctx.query.id;

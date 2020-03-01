@@ -32,14 +32,15 @@ const Help = ({ children }) => {
         }
         .tooltip {
           color: black;
-          background-color: #ffcc00;
+          background-color: #fcde67;
           position: absolute;
           right: 2em;
           top: 0;
           z-index: 1;
-          width: 10em;
+          width: 15em;
           text-align: left;
           padding: 1em;
+          line-height: 1.5em;
         }
         .help {
           border: 1px solid black;

@@ -5,6 +5,10 @@ const WarningBanner = props => {
         <p>{props.children}</p>
       </div>
       <style jsx>{`
+        :global(em) {
+          font-style: normal;
+          text-decoration: underline;
+        }
         p {
           margin: 0;
         }
@@ -16,6 +20,16 @@ const WarningBanner = props => {
           flex-direction: row;
           justify-content: center;
           align-items: center;
+        }
+        :global(button) {
+          border: solid 1px black;
+          background: white;
+          margin-left: 1em;
+        }
+
+        :global(button.danger) {
+          background: none;
+          color: white;
         }
       `}</style>
     </>

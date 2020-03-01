@@ -3,19 +3,20 @@ import Play from "../../components/Play";
 
 const PlayUuid = ({ gistID, files, audioURL, events }) => {
   if (!files || files.length == 0) {
-    return <div>Not sure how you got here, but I hope everything's okay!</div>;
-  } else {
     return (
       <div>
-        <Play
-          gistID={gistID}
-          files={files}
-          eventLog={events}
-          audio={audioURL}
-        />
+        <WarningBanner>
+          Playback error. That recording couldn't be found.
+        </WarningBanner>
       </div>
     );
   }
+
+  return (
+    <div>
+      <Play gistID={gistID} files={files} eventLog={events} audio={audioURL} />
+    </div>
+  );
 };
 
 PlayUuid.getInitialProps = async ctx => {

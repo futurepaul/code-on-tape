@@ -1,8 +1,10 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useContext } from "react";
+import EditorContext from "../context/editor/editorContext";
 
-export default function AudioRecorder({ onHasMediaUrl, onClickRecord }) {
+export default function AudioRecorder({ onClickRecord }) {
+  const editorContext = useContext(EditorContext);
+  const { setAudioURL, setAudioBlob, setRecordingError } = editorContext;
   const [status, setStatus] = useState("");
-  const [startTime, setStartTime] = useState(null);
 
   const mediaRecorder = useRef(null);
   const mediaStream = useRef(null);
@@ -15,13 +17,15 @@ export default function AudioRecorder({ onHasMediaUrl, onClickRecord }) {
       });
       mediaStream.current = stream;
     } catch (error) {
-      throw new Error(error);
+      setRecordingError("microphone");
+      console.error(error);
     }
   }, ["once"]);
 
   useEffect(() => {
     if (!window.MediaRecorder) {
-      throw new Error("Unsupported Browser");
+      setRecordingError("browser");
+      console.error("Unsupported browser");
     }
 
     async function loadStream() {
@@ -51,6 +55,7 @@ export default function AudioRecorder({ onHasMediaUrl, onClickRecord }) {
       mediaRecorder.current.addEventListener("stop", onRecordingStop);
       mediaRecorder.current.addEventListener("error", err => {
         console.error(err);
+        setRecordingError(err.message);
       });
 
       mediaRecorder.current.start();
@@ -75,7 +80,8 @@ export default function AudioRecorder({ onHasMediaUrl, onClickRecord }) {
   const onRecordingStop = () => {
     const blob = new Blob(mediaChunks.current, { type: "audio/mpeg" });
     const url = URL.createObjectURL(blob);
-    onHasMediaUrl(url, blob);
+    setAudioURL(url);
+    setAudioBlob(blob);
   };
 
   const onClick = () => {
@@ -86,9 +92,29 @@ export default function AudioRecorder({ onHasMediaUrl, onClickRecord }) {
       onClickRecord(false, null);
       stopRecording();
     } else {
-      throw new Error("I don't know what to do!");
+      let error = new Error("I don't know how this happened.");
+      setRecordingError(error.message);
+      console.error(error);
     }
   };
 
-  return <button onClick={onClick}>Record</button>;
+  return (
+    <>
+      <button className={status === "recording" && "active"} onClick={onClick}>
+        {status === "recording" ? "Stop Recording" : "Record"}
+      </button>
+
+      <style jsx>{`
+        button {
+          border: solid 1px black;
+          background-color: #00ffff;
+          margin: 1rem;
+        }
+
+        button.active {
+          background-color: red;
+        }
+      `}</style>
+    </>
+  );
 }

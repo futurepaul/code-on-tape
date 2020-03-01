@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import EditorContext from "../../context/editor/editorContext";
 
 import Play from "../../components/Play";
@@ -9,41 +9,36 @@ const PlayWithState = () => {
   const editorContext = useContext(EditorContext);
   const { audioURL, gists, gistID, events } = editorContext;
 
+  useEffect(() => {
+    window.addEventListener("beforeunload", e => {
+      e.preventDefault();
+      var confirmationMessage =
+        "If you leave this page without uploading your recording will be lost!";
+      return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+    });
+  });
+
   if (!gists || gists.length == 0) {
-    console.log(gists);
-    return <div>Not sure how you got here, but I hope everything's okay!</div>;
-  } else {
     return (
       <div>
         <WarningBanner>
-          Here's an <em>(unsaved!)</em> preview of your recording.
-          <Link href="/upload">
-            <button>Save and share</button>
-          </Link>
-          <style jsx>
-            {`
-              em {
-                font-style: normal;
-                text-decoration: underline;
-              }
-
-              button {
-                background-color: white;
-                border: 1px solid black;
-                margin-left: 1em;
-              }
-            `}
-          </style>
+          Playback error. Maybe try recording again?
         </WarningBanner>
-        <Play
-          gistID={gistID}
-          files={gists}
-          eventLog={events}
-          audio={audioURL}
-        />
       </div>
     );
   }
+
+  return (
+    <div>
+      <WarningBanner>
+        Here's an <em>(unsaved!)</em> preview of your recording.
+        <Link href="/upload">
+          <button>Save and share</button>
+        </Link>
+      </WarningBanner>
+      <Play gistID={gistID} files={gists} eventLog={events} audio={audioURL} />
+    </div>
+  );
 };
 
 export default PlayWithState;
