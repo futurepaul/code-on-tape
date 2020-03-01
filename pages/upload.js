@@ -176,10 +176,10 @@ const Upload = () => {
 
   return (
     <>
-      <div className="center-wrap">
-        {uploadError ? (
-          uploadFailMessage
-        ) : (
+      {uploadError ? (
+        uploadFailMessage
+      ) : (
+        <div className="center-wrap">
           <div>
             {(!eventsUrl || !audioUrl || !gistsUrl || !playbackUrl) && (
               <div className="upload">
@@ -197,8 +197,8 @@ const Upload = () => {
               </div>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <style jsx>{`
         h2 {
           text-shadow: 2px 2px #00ffff;
