@@ -20,13 +20,13 @@ const useRecorder = () => {
           setShouldStartRecording(false);
         });
       }
+
       return;
     }
 
     // Manage recorder state.
     if (shouldStartRecording) {
       recorder.start();
-      setIsRecordingAudio(true);
     } else {
       recorder.stop();
     }
@@ -38,7 +38,12 @@ const useRecorder = () => {
       setIsRecordingAudio(false);
     };
 
+    const handleStart = () => {
+      setIsRecordingAudio(true);
+    };
+
     recorder.addEventListener("dataavailable", handleData);
+    recorder.addEventListener("start", handleStart);
 
     return () => {
       recorder.stream.getTracks().forEach(i => i.stop());
@@ -54,7 +59,14 @@ const useRecorder = () => {
     setShouldStartRecording(false);
   };
 
-  return [audioURL, audioBlob, isRecordingAudio, startRecording, stopRecording];
+  return [
+    audioURL,
+    audioBlob,
+    isRecordingAudio,
+    startRecording,
+    stopRecording,
+    recorder
+  ];
 };
 
 async function requestRecorder() {

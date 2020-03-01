@@ -141,11 +141,12 @@ const Play = ({ gistID, files, eventLog, audio }) => {
     setActiveTab(id);
   };
 
+  //TODO: handle missing audio
   return (
     <div onKeyPress={onKeyPress}>
       <AudioPlayer
         onClickPlay={startPlaying}
-        audioSrcUrl={audio ? audio : "/coloradogirl.mp3"}
+        audioSrcUrl={audio}
         onMouseDown={() => setIsScrubbing(true)}
         onMouseUp={onPostScrub}
         ref={audioRef}

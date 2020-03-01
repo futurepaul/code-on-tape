@@ -32,8 +32,12 @@ const AudioPlayer = React.forwardRef(
     const play = () => {
       onClickPlay();
       if (!playing) {
-        audioPlayerEl.current.play();
-        setPlaying(true);
+        try {
+          audioPlayerEl.current.play();
+          setPlaying(true);
+        } catch (e) {
+          console.error(e);
+        }
       } else {
         audioPlayerEl.current.pause();
         setPlaying(false);

@@ -1,8 +1,9 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Editor from "../../components/Editor/Editor";
 import RecordControls from "../../components/RecordControls";
 import Tabs from "../../components/Tabs";
 import WarningBanner from "../../components/WarningBanner";
+import AudioRecorder from "../../components/AudioRecorder";
 import EditorContext from "../../context/editor/editorContext";
 import Router from "next/router";
 import fetch from "isomorphic-unfetch";
@@ -21,6 +22,7 @@ const Record = ({ gistID, files }) => {
   const [eventLog, setEventLog] = useState(null);
   const [recordingStartTime, setRecordingStartTime] = useState(null);
   const [isRecording, setIsRecording] = useState(null);
+  const [recordingError, setRecordingError] = useState(null);
 
   // Audio recording
   let [
@@ -28,7 +30,8 @@ const Record = ({ gistID, files }) => {
     audioBlob,
     isRecordingAudio,
     startRecordingAudio,
-    stopRecordingAudio
+    stopRecordingAudio,
+    recorder
   ] = useRecorder();
 
   // Editor context for forwarding state to the playback preview
@@ -65,13 +68,27 @@ const Record = ({ gistID, files }) => {
   };
 
   const onClickRecord = () => {
+    console.log("clicked record");
+    if (!recorder) {
+      // requestMicrophone();
+      return;
+    }
+
+    // if (recorder && !recorder.stream) {
+    //   setRecordingError("Didn't do a good job accepting I bet.");
+    //   // setRecorder(null);
+    //   return;
+    // }
+
     if (!isRecording) {
       setIsRecording(true);
       startRecordingAudio();
       setEventLog([{ time: 0, cursor: cursor, tab: activeTab }]);
       console.log("Starting recording");
       setRecordingStartTime(performance.now());
-    } else {
+    }
+
+    if (isRecording && recorder && recorder.stream) {
       setIsRecording(false);
       stopRecordingAudio();
       console.log("Stopping recording");
@@ -113,6 +130,11 @@ const Record = ({ gistID, files }) => {
 
   return (
     <div>
+      {recordingError && (
+        <>
+          <WarningBanner>{recordingError}</WarningBanner>
+        </>
+      )}
       {!isRecording && eventLog && eventLog.length > 1 ? (
         <>
           <WarningBanner>
