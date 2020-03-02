@@ -88,20 +88,22 @@ const Upload = () => {
 
   useEffect(() => {
     const listener = e => {
-      if (!success) {
-        e.preventDefault();
-        var confirmationMessage =
-          "If you leave this page without uploading your recording will be lost!";
-        return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-      }
+      e.preventDefault();
+      var confirmationMessage =
+        "If you leave this page without uploading your recording will be lost!";
+      return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
     };
 
-    window.addEventListener("beforeunload", listener);
+    if (!success) {
+      window.addEventListener("beforeunload", listener);
+    } else {
+      window.removeEventListener("beforeunload", listener);
+    }
 
     return () => {
       window.removeEventListener("beforeunload", listener);
     };
-  });
+  }, [success]);
 
   // Generate Uuid
   const uuid = uuidv4();
