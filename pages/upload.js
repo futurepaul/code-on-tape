@@ -87,14 +87,20 @@ const Upload = () => {
   const [uploadError, setUploadError] = useState(null);
 
   useEffect(() => {
-    window.addEventListener("beforeunload", e => {
+    const listener = e => {
       if (!success) {
         e.preventDefault();
         var confirmationMessage =
           "If you leave this page without uploading your recording will be lost!";
         return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
       }
-    });
+    };
+
+    window.addEventListener("beforeunload", listener);
+
+    return () => {
+      window.removeEventListener("beforeunload", listener);
+    };
   });
 
   // Generate Uuid
@@ -160,28 +166,16 @@ const Upload = () => {
   };
 
   const uploadFailMessage = (
-    <div>
-      <WarningBanner>
-        Upload error. Sorry! Please{" "}
-        <a href="https://github.com/futurepaul/code-on-tape/issues">
-          <button>open an issue</button>
-        </a>{" "}
-        or{" "}
-        <a href="https://twitter.com/futurepaul/">
-          <button>hit me up on Twitter</button>
-        </a>
-      </WarningBanner>
-
-      <div className="upload">
-        <p>
-          <h2>
-            <a
-              href={`https://codeontape.com${playbackUrl}`}
-            >{`https://codeontape.com${playbackUrl}`}</a>
-          </h2>
-        </p>
-      </div>
-    </div>
+    <WarningBanner>
+      Upload error. Sorry! Please{" "}
+      <a href="https://github.com/futurepaul/code-on-tape/issues">
+        <button>open an issue</button>
+      </a>{" "}
+      or{" "}
+      <a href="https://twitter.com/futurepaul/">
+        <button>hit me up on Twitter</button>
+      </a>
+    </WarningBanner>
   );
 
   if (!gists || gists.length == 0) {
@@ -210,7 +204,7 @@ const Upload = () => {
                 <p>
                   <h2>
                     <a
-                      href={`codeontape.com${playbackUrl}`}
+                      href={`${playbackUrl}`}
                     >{`codeontape.com${playbackUrl}`}</a>
                   </h2>
                 </p>
