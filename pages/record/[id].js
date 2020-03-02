@@ -7,7 +7,7 @@ import EditorContext from "../../context/editor/editorContext";
 import Router from "next/router";
 import fetch from "isomorphic-unfetch";
 import useInterval from "../../hooks/useInterval";
-import Head from "next/head";
+import Layout from "../../components/Layout";
 
 const defaultCursor = { lineNumber: 1, column: 1 };
 
@@ -119,10 +119,7 @@ const Record = ({ gistID, files }) => {
   );
 
   return (
-    <div>
-      <Head>
-        <title>Record</title>
-      </Head>
+    <Layout title="Record">
       {recordingError === "microphone" && microphone_fail}
       {recordingError === "browser" && browser_fail}
       {!isRecording &&
@@ -149,7 +146,7 @@ const Record = ({ gistID, files }) => {
         cursor={cursor}
         onCursorChange={onCursorChange}
       />
-    </div>
+    </Layout>
   );
 };
 

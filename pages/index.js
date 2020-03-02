@@ -1,14 +1,11 @@
 import Intro from "../components/Intro";
-import Head from "next/head";
+import Layout from "../components/Layout";
 
 const App = () => {
   return (
-    <>
-      <Head>
-        <title>Code on tape</title>
-      </Head>
-      <Intro />;
-    </>
+    <Layout>
+      <Intro />
+    </Layout>
   );
 };
 

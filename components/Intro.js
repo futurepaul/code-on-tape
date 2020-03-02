@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import Link from "next/link";
+import SelfCredit from "./SelfCredit";
 import { useRouter } from "next/router";
 
 function parseGist(input) {
@@ -42,6 +42,7 @@ const Intro = () => {
             </a>{" "}
             for testing.)
           </p>
+          <SelfCredit />
         </div>
       </div>
       <style jsx>{`

@@ -3,7 +3,8 @@ import EditorContext from "../context/editor/editorContext";
 import WarningBanner from "../components/WarningBanner";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import Head from "next/head";
+import Layout from "../components/Layout";
+import SelfCredit from "../components/SelfCredit";
 
 function fileUpload(
   fileName,
@@ -137,17 +138,6 @@ const Upload = () => {
     setPlaybackUrl(`/play/${uuid}`);
   };
 
-  const copyUrl = text => {
-    navigator.clipboard.writeText(text).then(
-      function() {
-        console.log("Async: Copying to clipboard was successful!");
-      },
-      function(err) {
-        console.error("Async: Could not copy text: ", err);
-      }
-    );
-  };
-
   const uploadFailMessage = (
     <WarningBanner>
       Upload error. Sorry! Please{" "}
@@ -166,35 +156,28 @@ const Upload = () => {
   }
 
   return (
-    <>
-      <Head>
-        <title>Upload</title>
-      </Head>
-      {uploadError ? (
-        uploadFailMessage
-      ) : (
-        <div className="center-wrap">
-          <div>
-            {(!eventsUrl || !audioUrl || !gistsUrl || !playbackUrl) && (
-              <div className="upload">
-                <button onClick={handleUpload}>Upload!</button>
-                <ProgressBar progress={uploadPercent} />
-              </div>
-            )}
+    <Layout title="Upload">
+      {uploadError && uploadFailMessage}
+      <div className="center-wrap">
+        <div className="upload">
+          {(!eventsUrl || !audioUrl || !gistsUrl || !playbackUrl) && (
+            <>
+              <button onClick={handleUpload}>Upload!</button>
+              <ProgressBar progress={uploadPercent} />
+            </>
+          )}
 
-            {eventsUrl && audioUrl && gistsUrl && playbackUrl && (
-              <div className="upload">
-                <p>
-                  <h2>
-                    <a
-                      href={`${playbackUrl}`}
-                    >{`codeontape.com${playbackUrl}`}</a>
-                  </h2>
-                </p>
-              </div>
-            )}
-          </div>
+          {eventsUrl && audioUrl && gistsUrl && playbackUrl && (
+            <p>
+              <h2>
+                <a href={`${playbackUrl}`}>{`codeontape.com${playbackUrl}`}</a>
+              </h2>
+            </p>
+          )}
+          <p></p>
+          <SelfCredit />
         </div>
+      </div>
       )}
       <style jsx>{`
         h2 a {
@@ -208,13 +191,15 @@ const Upload = () => {
           border: solid 1px black;
           background-color: #00ffff;
         }
+        .spacer {
+          height: 2em;
+        }
 
         .upload {
           display: flex;
           justify-content: center;
           align-items: center;
           flex-direction: column;
-          background-color: white;
           width: 20em;
           height: 20em;
         }
@@ -226,7 +211,7 @@ const Upload = () => {
           height: 100vh;
         }
       `}</style>
-    </>
+    </Layout>
   );
 };
 

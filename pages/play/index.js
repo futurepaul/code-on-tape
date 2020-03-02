@@ -1,10 +1,9 @@
 import { useContext, useEffect } from "react";
 import EditorContext from "../../context/editor/editorContext";
-
 import Play from "../../components/Play";
 import WarningBanner from "../../components/WarningBanner";
 import Link from "next/link";
-import Head from "next/head";
+import Layout from "../../components/Layout";
 
 const PlayWithState = () => {
   const editorContext = useContext(EditorContext);
@@ -21,10 +20,7 @@ const PlayWithState = () => {
   }
 
   return (
-    <>
-      <Head>
-        <title>Preview</title>
-      </Head>
+    <Layout title="Preview">
       <WarningBanner>
         Here's an <em>(unsaved!)</em> preview of your recording.{" "}
         <Link href="/upload">
@@ -32,7 +28,7 @@ const PlayWithState = () => {
         </Link>
       </WarningBanner>
       <Play gistID={gistID} files={gists} eventLog={events} audio={audioURL} />
-    </>
+    </Layout>
   );
 };
 

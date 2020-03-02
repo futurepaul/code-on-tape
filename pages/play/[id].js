@@ -1,33 +1,27 @@
 import fetch from "isomorphic-unfetch";
 import WarningBanner from "../../components/WarningBanner";
 import Play from "../../components/Play";
-import Head from "next/head";
+import Layout from "../../components/Layout";
 
 const PlayUuid = ({ gistID, files, audioURL, events }) => {
   if (!files || files.length == 0) {
     return (
-      <div>
-        <Head>
-          <title>Playback Error</title>
-        </Head>
+      <Layout title="Playback Error">
         <WarningBanner>
           Playback error. That recording couldn't be found.
         </WarningBanner>
-      </div>
+      </Layout>
     );
   } else {
     return (
-      <div>
-        <Head>
-          <title>Code on tape</title>
-        </Head>
+      <Layout>
         <Play
           gistID={gistID}
           files={files}
           eventLog={events}
           audio={audioURL}
         />
-      </div>
+      </Layout>
     );
   }
 };
