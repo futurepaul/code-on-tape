@@ -3,7 +3,7 @@ import EditorContext from "../context/editor/editorContext";
 import WarningBanner from "../components/WarningBanner";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import Link from "next/link";
+import Head from "next/head";
 
 function fileUpload(
   fileName,
@@ -190,6 +190,9 @@ const Upload = () => {
 
   return (
     <>
+      <Head>
+        <title>Upload</title>
+      </Head>
       {uploadError ? (
         uploadFailMessage
       ) : (
@@ -217,7 +220,7 @@ const Upload = () => {
         </div>
       )}
       <style jsx>{`
-        a:h2 {
+        h2 a {
           color: black;
           text-shadow: 2px 2px #00ffff;
         }

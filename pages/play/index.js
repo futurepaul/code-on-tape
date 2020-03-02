@@ -4,6 +4,7 @@ import EditorContext from "../../context/editor/editorContext";
 import Play from "../../components/Play";
 import WarningBanner from "../../components/WarningBanner";
 import Link from "next/link";
+import Head from "next/head";
 
 const PlayWithState = () => {
   const editorContext = useContext(EditorContext);
@@ -29,7 +30,10 @@ const PlayWithState = () => {
   }
 
   return (
-    <div>
+    <>
+      <Head>
+        <title>Preview</title>
+      </Head>
       <WarningBanner>
         Here's an <em>(unsaved!)</em> preview of your recording.{" "}
         <Link href="/upload">
@@ -37,7 +41,7 @@ const PlayWithState = () => {
         </Link>
       </WarningBanner>
       <Play gistID={gistID} files={gists} eventLog={events} audio={audioURL} />
-    </div>
+    </>
   );
 };
 

@@ -1,11 +1,15 @@
 import fetch from "isomorphic-unfetch";
 import WarningBanner from "../../components/WarningBanner";
 import Play from "../../components/Play";
+import Head from "next/head";
 
 const PlayUuid = ({ gistID, files, audioURL, events }) => {
   if (!files || files.length == 0) {
     return (
       <div>
+        <Head>
+          <title>Playback Error</title>
+        </Head>
         <WarningBanner>
           Playback error. That recording couldn't be found.
         </WarningBanner>
@@ -14,6 +18,9 @@ const PlayUuid = ({ gistID, files, audioURL, events }) => {
   } else {
     return (
       <div>
+        <Head>
+          <title>Code on tape</title>
+        </Head>
         <Play
           gistID={gistID}
           files={files}
