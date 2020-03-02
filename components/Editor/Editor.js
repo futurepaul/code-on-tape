@@ -11,7 +11,7 @@ if (process.browser && !MonacoEditor) {
 const Editor = ({ gist, tabID, cursor, onCursorChange }) => {
   // console.log(`RecordEditor active tab: ${tabID}`);
   if (!MonacoEditor) {
-    return <div></div>;
+    return <div>Loading...</div>;
   }
 
   return (
