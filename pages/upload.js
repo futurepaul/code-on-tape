@@ -86,24 +86,24 @@ const Upload = () => {
   const [playbackUrl, setPlaybackUrl] = useState(null);
   const [uploadError, setUploadError] = useState(null);
 
-  useEffect(() => {
-    const listener = e => {
-      e.preventDefault();
-      var confirmationMessage =
-        "If you leave this page without uploading your recording will be lost!";
-      return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-    };
+  // useEffect(() => {
+  //   const listener = e => {
+  //     e.preventDefault();
+  //     var confirmationMessage =
+  //       "If you leave this page without uploading your recording will be lost!";
+  //     return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+  //   };
 
-    if (!success) {
-      window.addEventListener("beforeunload", listener);
-    } else {
-      window.removeEventListener("beforeunload", listener);
-    }
+  //   if (!success) {
+  //     window.addEventListener("beforeunload", listener);
+  //   } else {
+  //     window.removeEventListener("beforeunload", listener);
+  //   }
 
-    return () => {
-      window.removeEventListener("beforeunload", listener);
-    };
-  }, [success]);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", listener);
+  //   };
+  // }, [success]);
 
   // Generate Uuid
   const uuid = uuidv4();
