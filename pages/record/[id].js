@@ -93,10 +93,11 @@ const Record = ({ gistID, files }) => {
 
   const success = (
     <WarningBanner>
-      Recorded!
+      Recorded!{" "}
       <button className="continue" onClick={gotoPlaybackPreview}>
-        Go to playback preview
-      </button>
+        {" "}
+        Go to playback preview{" "}
+      </button>{" "}
       <button className="danger" onClick={() => location.reload()}>
         Clear recording and start over
       </button>

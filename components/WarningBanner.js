@@ -24,7 +24,6 @@ const WarningBanner = props => {
         :global(button) {
           border: solid 1px black;
           background: white;
-          margin-left: 1em;
         }
 
         :global(button.danger) {

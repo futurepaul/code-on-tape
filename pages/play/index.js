@@ -31,7 +31,7 @@ const PlayWithState = () => {
   return (
     <div>
       <WarningBanner>
-        Here's an <em>(unsaved!)</em> preview of your recording.
+        Here's an <em>(unsaved!)</em> preview of your recording.{" "}
         <Link href="/upload">
           <button>Save and share</button>
         </Link>

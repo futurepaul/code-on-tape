@@ -3,6 +3,7 @@ import EditorContext from "../context/editor/editorContext";
 import WarningBanner from "../components/WarningBanner";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import Link from "next/link";
 
 function fileUpload(
   fileName,
@@ -163,10 +164,23 @@ const Upload = () => {
       <WarningBanner>
         Upload error. Sorry! Please{" "}
         <a href="https://github.com/futurepaul/code-on-tape/issues">
-          open an issue
+          <button>open an issue</button>
         </a>{" "}
-        or <a href="https://twitter.com/futurepaul/">hit me up on Twitter</a>
+        or{" "}
+        <a href="https://twitter.com/futurepaul/">
+          <button>hit me up on Twitter</button>
+        </a>
       </WarningBanner>
+
+      <div className="upload">
+        <p>
+          <h2>
+            <a
+              href={`https://codeontape.com${playbackUrl}`}
+            >{`https://codeontape.com${playbackUrl}`}</a>
+          </h2>
+        </p>
+      </div>
     </div>
   );
 
@@ -191,8 +205,11 @@ const Upload = () => {
             {eventsUrl && audioUrl && gistsUrl && playbackUrl && (
               <div className="upload">
                 <p>
-                  <a href={playbackUrl}>{playbackUrl}</a>{" "}
-                  <button onClick={() => copyUrl(playbackUrl)}>Copy</button>
+                  <h2>
+                    <a
+                      href={`codeontape.com${playbackUrl}`}
+                    >{`codeontape.com${playbackUrl}`}</a>
+                  </h2>
                 </p>
               </div>
             )}
@@ -200,7 +217,8 @@ const Upload = () => {
         </div>
       )}
       <style jsx>{`
-        h2 {
+        a:h2 {
+          color: black;
           text-shadow: 2px 2px #00ffff;
         }
 
