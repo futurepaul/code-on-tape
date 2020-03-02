@@ -10,15 +10,6 @@ const PlayWithState = () => {
   const editorContext = useContext(EditorContext);
   const { audioURL, gists, gistID, events } = editorContext;
 
-  useEffect(() => {
-    window.addEventListener("beforeunload", e => {
-      e.preventDefault();
-      var confirmationMessage =
-        "If you leave this page without uploading your recording will be lost!";
-      return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-    });
-  });
-
   if (!gists || gists.length == 0) {
     return (
       <div>
