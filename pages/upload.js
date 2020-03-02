@@ -180,11 +180,6 @@ const Upload = () => {
       </div>
       )}
       <style jsx>{`
-        h2 a {
-          color: black;
-          text-shadow: 2px 2px #00ffff;
-        }
-
         button {
           padding: 10px 10px;
           border-radius: 0;
